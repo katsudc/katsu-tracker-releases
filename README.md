@@ -11,6 +11,7 @@ VALORANT için katsu tarafından geliştirilen Windows masaüstü arayüzü.
 - Spike simgesini izleyen, oyun monitöründe görünen sade sayaç.
 - Beş renk teması, Türkçe/İngilizce arayüz ve otomatik kaydedilen tercihler.
 - Windows Spotify uygulaması için şarkı bilgisi, kapak, oynatma ve yalnızca Spotify’a özel ses kontrolü.
+- Ajan, harita ve saldırı/savunma filtreleriyle uygulama içinde Tracker.gg lineup videoları.
 - İmzalı otomatik güncellemeler.
 
 [Windows kurulumunu indir](https://github.com/katsudc/katsu-tracker-releases/releases/latest/download/Katsu-Tracker-setup.exe)
@@ -30,6 +31,7 @@ A Windows desktop companion for VALORANT, maintained by katsu.
 - A compact timer triggered by the planted-spike HUD icon on the game monitor.
 - Five accent themes, Turkish/English UI and saved preferences.
 - Spotify desktop track metadata, artwork, playback controls and Spotify-only volume.
+- In-app Tracker.gg lineup guides filtered by agent, map and attack/defense.
 - Signed automatic updates.
 
 [Download for Windows](https://github.com/katsudc/katsu-tracker-releases/releases/latest/download/Katsu-Tracker-setup.exe)
