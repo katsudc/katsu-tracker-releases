@@ -17,7 +17,7 @@ VALORANT için katsu tarafından geliştirilen Windows masaüstü arayüzü.
 
 İlk kurulumdan sonra yeni sürümler arka planda indirilir. Güncelleme hazır olduğunda VALORANT kapalıyken bildirim düğmesinden kurabilir veya tracker’ı sonraki açışında yükletebilirsin. Ayarların korunur.
 
-KDA / HS% / WR değerleri erişilebilen en fazla son 20 rekabetçi maça aittir. Tracker Score veya tüm zamanlar istatistikleri değildir. Spotify için Windows masaüstü uygulamasında bir şarkı açmak yeterlidir; tracker içinde hesap girişi gerekmez.
+KDA / HS% / WR değerleri erişilebilen en fazla son 20 rekabetçi maça aittir. Veriler aşamalı yüklenir; tamamlanana kadar işlenen maç sayısı gösterilir. Tracker Score veya tüm zamanlar istatistikleri değildir. Spotify için Windows masaüstü uygulamasında bir şarkı açmak yeterlidir; tracker içinde hesap girişi gerekmez.
 
 Bu GitHub deposu şu anda kurulum dosyaları ve güncellemeler içindir. Kaynak kod bu dağıtım deposunda henüz yayımlanmamıştır.
 
@@ -36,7 +36,7 @@ A Windows desktop companion for VALORANT, maintained by katsu.
 
 After the first installation, new versions download in the background. Install a ready update using its notification while VALORANT is closed, or let it install when you next open the tracker. Existing preferences are preserved.
 
-KDA / HS% / WR cover up to 20 accessible recent Competitive matches, not lifetime statistics or Tracker Score. To enable music controls, play a track in the Windows Spotify desktop app; no Spotify sign-in inside the tracker is required.
+Stats load progressively, with the processed match count shown until completion. KDA / HS% / WR cover up to 20 accessible recent Competitive matches, not lifetime statistics or Tracker Score. To enable music controls, play a track in the Windows Spotify desktop app; no Spotify sign-in inside the tracker is required.
 
 This GitHub repository currently distributes installers and updates. Source code has not yet been published in this distribution repository.
 
