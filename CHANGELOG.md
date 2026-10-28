@@ -1,5 +1,15 @@
 # Release notes
 
+## 1.9.6-personal.45
+
+- Add the optional Game Bar Spike timer for Fullscreen; windowed modes keep the desktop overlay.
+- Ask before downloading or installing Fullscreen support. Bundle the widget and public publisher certificate; Windows administrator approval can still be required.
+- Restore the widget when a plant is detected and minimize its actual window when idle, preventing an invisible rectangle from blocking clicks.
+- Add dedicated Instalock and Spike Timer pages below Statistics.
+- Keep the windowed visual editor and add independent Game Bar text-size/background settings, with Win + G drag instructions.
+- Place Lock Delay immediately below the agent portraits.
+- Preserve visual icon detection, round-end reset, existing preferences and the other tracker features.
+
 ## 1.9.6-personal.38
 
 - Remove the legacy bottom-right update button and its unused translations.

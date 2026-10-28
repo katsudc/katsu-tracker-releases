@@ -34,8 +34,8 @@ Your personal match history stays useful between games. Preferences are saved au
 | Feature | What it brings to your setup |
 | :--- | :--- |
 | **Live match overview** | Both teams, available player identities, agents and rank icons. Confirmed unranked accounts and unavailable ranks have distinct labels. |
-| **Agent presets** | A default agent, map-specific choices and a configurable automatic-lock delay. |
-| **Visual Spike timer** | A compact countdown triggered by the planted-Spike HUD icon, displayed on the game monitor and reset when the round ends. Drag, resize and restyle it in a saved visual editor. |
+| **Instalock** | A dedicated page for the default agent, map-specific choices and a lock-delay control directly below the portraits. |
+| **Visual Spike timer** | HUD-icon detection with a desktop overlay for windowed modes and an optional Game Bar widget for Fullscreen. Independent appearance settings, saved windowed editor and round-end reset. |
 | **Spotify mini-player** | Track information, artwork, progress, previous/play/next and Spotify-only volume in an expandable player. |
 | **Personal history & insights** | Your last 5, 10 or 20 accessible Competitive matches, personal performance trends and agent/map breakdowns. |
 | **Community lineups** | Browse Tracker.gg guides with agent, map and attack/defense filters. |
@@ -61,9 +61,9 @@ Your personal match history stays useful between games. Preferences are saved au
 1. [Download the latest Windows installer](https://github.com/katsudc/katsu-tracker-releases/releases/latest/download/Katsu-Tracker-setup.exe).
 2. Install and launch **katsu's Tracker**.
 3. Open Riot Client and VALORANT normally. The tracker connects to the existing session.
-4. Press **F2** to show or hide the main window. Choose your agent preferences and theme in **Options**.
+4. Press **F2** to show or hide the main window. Open **Instalock** for agent preferences, **Spike Timer** for countdown settings, and **Options** for themes and general preferences.
 
-The overlay follows the physical game viewport across resolutions and monitors. Windows must compose external windows over the game; **Borderless Windowed / Windowed Fullscreen** is the most reliable mode. True exclusive fullscreen can hide external overlays. The visual Spike detector needs the HUD to remain visible. To use music controls, play a track in the Windows Spotify desktop app.
+The desktop Spike overlay follows the physical game viewport across resolutions and monitors. **Fullscreen** uses the optional Xbox Game Bar widget: approve setup in **Spike Timer**, then pin **katsu’s Tracker** in **Win + G**. Move it by dragging it there; the windowed editor remains separate. The detector needs the game HUD visible. To use music controls, play a track in the Windows Spotify desktop app.
 
 [Installation & setup](docs/GETTING_STARTED.md) · [Troubleshooting](docs/TROUBLESHOOTING.md)
 

@@ -1,10 +1,12 @@
 import "./desktop.css";
 import { UpdateNotice } from "./components/UpdateNotice";
+import { GameBarSetupNotice } from "./components/SpikeOutputSettings";
 import "./tracker/tracker.css";
 import { useTrackerLifecycle } from "./tracker/lifecycle";
 import { StatisticsPage } from "./tracker/TrackerViews";
 import { LineupsPage } from "./components/LineupsPage";
 import { DesktopSidebar } from "./components/DesktopSidebar";
+import { FeatureSettingsPage } from "./components/FeatureSettingsPage";
 import { DashboardOverview } from "./components/DashboardOverview";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
@@ -193,6 +195,7 @@ function App() {
     <div className="desktop-shell">
       <Header />
       <UpdateNotice />
+      <GameBarSetupNotice />
       <div className="desktop-body">
       <DesktopSidebar view={view} setView={setView}/>
       <div className="tracker-workspace">
@@ -213,14 +216,14 @@ function App() {
             </span>
           </div>
         )}
-        {view==="lineups"?<LineupsPage/>:view==="statistics"?<StatisticsPage/>:renderContent()}
+        {view==="instalock"||view==="spike"?<FeatureSettingsPage kind={view}/>:view==="lineups"?<LineupsPage/>:view==="statistics"?<StatisticsPage/>:renderContent()}
         <Footer />
 
         {/* Weapon hover overlay */}
         <WeaponOverlay />
 
         {/* Agent hover overlay for settings */}
-        <AgentOverlay key="agent-overlay" />
+        <AgentOverlay key="agent-overlay" enabled={view === "instalock"} />
 
         {/* Crosshair hover preview for presets */}
         <CrosshairOverlay />

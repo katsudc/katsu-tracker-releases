@@ -9,12 +9,27 @@ pub struct Point {
     pub x: f64,
     pub y: f64,
 }
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(default)]
+pub struct WidgetAppearance {
+    pub font_size: f64,
+    pub background_opacity: f64,
+}
+impl Default for WidgetAppearance {
+    fn default() -> Self {
+        Self {
+            font_size: 30.0,
+            background_opacity: 0.78,
+        }
+    }
+}
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 #[serde(default)]
 pub struct Appearance {
     pub position: Option<Point>,
     pub font_size: f64,
     pub background_opacity: f64,
+    pub game_bar: WidgetAppearance,
 }
 impl Default for Appearance {
     fn default() -> Self {
@@ -22,6 +37,7 @@ impl Default for Appearance {
             position: None,
             font_size: 30.0,
             background_opacity: 0.78,
+            game_bar: WidgetAppearance::default(),
         }
     }
 }
@@ -31,6 +47,10 @@ impl Appearance {
             || !(14.0..=84.0).contains(&self.font_size)
             || !self.background_opacity.is_finite()
             || !(0.0..=1.0).contains(&self.background_opacity)
+            || !self.game_bar.font_size.is_finite()
+            || !(14.0..=84.0).contains(&self.game_bar.font_size)
+            || !self.game_bar.background_opacity.is_finite()
+            || !(0.0..=1.0).contains(&self.game_bar.background_opacity)
             || self.position.is_some_and(|p| {
                 !p.x.is_finite()
                     || !p.y.is_finite()
@@ -53,12 +73,26 @@ pub struct Preferences {
     value: Mutex<Appearance>,
     path: PathBuf,
 }
+fn decode(bytes: &[u8]) -> Option<Appearance> {
+    if bytes.len() > 64 * 1024 {
+        return None;
+    }
+    let json: serde_json::Value = serde_json::from_slice(bytes).ok()?;
+    let mut value: Appearance = serde_json::from_value(json.clone()).ok()?;
+    if json.get("game_bar").is_none() {
+        value.game_bar = WidgetAppearance {
+            font_size: value.font_size,
+            background_opacity: value.background_opacity,
+        };
+    }
+    value.validate().ok()?;
+    Some(value)
+}
 pub fn setup(app: &tauri::AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     let path = app.path().app_data_dir()?.join("spike-overlay.json");
     let value = std::fs::read(&path)
         .ok()
-        .and_then(|b| serde_json::from_slice::<Appearance>(&b).ok())
-        .filter(|a| a.validate().is_ok())
+        .and_then(|b| decode(&b))
         .unwrap_or_default();
     app.manage(Preferences {
         value: Mutex::new(value),
@@ -85,6 +119,14 @@ pub fn set_spike_appearance(
     appearance.validate()?;
     let state = app.state::<Preferences>();
     let mut value = state.value.lock();
+    persist(&app, &state, &mut value, appearance)
+}
+fn persist(
+    app: &tauri::AppHandle,
+    state: &Preferences,
+    value: &mut Appearance,
+    appearance: Appearance,
+) -> Result<Appearance, String> {
     std::fs::create_dir_all(state.path.parent().ok_or("storage")?).map_err(|_| "storage")?;
     let temp = state.path.with_extension("json.tmp");
     std::fs::write(
@@ -96,6 +138,22 @@ pub fn set_spike_appearance(
     *value = appearance.clone();
     let _ = app.emit("spike-overlay-appearance", &appearance);
     Ok(appearance)
+}
+#[tauri::command]
+pub fn set_spike_gamebar_appearance(
+    window: tauri::WebviewWindow,
+    app: tauri::AppHandle,
+    appearance: WidgetAppearance,
+) -> Result<Appearance, String> {
+    if window.label() != "main" {
+        return Err("window".into());
+    }
+    let state = app.state::<Preferences>();
+    let mut value = state.value.lock();
+    let mut updated = value.clone();
+    updated.game_bar = appearance;
+    updated.validate()?;
+    persist(&app, &state, &mut value, updated)
 }
 #[derive(Serialize)]
 pub struct EditorContext {
@@ -147,6 +205,7 @@ mod tests {
             position: Some(Point { x: 0.3, y: 0.8 }),
             font_size: 64.0,
             background_opacity: 0.0,
+            ..Appearance::default()
         };
         assert!(a.validate().is_ok());
         assert_eq!(
@@ -167,5 +226,21 @@ mod tests {
         }
         .validate()
         .is_err());
+    }
+    #[test]
+    fn legacy_preferences_migrate_without_changing_desktop_style() {
+        let value =
+            decode(br#"{"position":{"x":0.3,"y":0.2},"font_size":61,"background_opacity":0.2}"#)
+                .unwrap();
+        assert_eq!(value.font_size, 61.0);
+        assert_eq!(value.game_bar.font_size, 61.0);
+        assert_eq!(value.game_bar.background_opacity, 0.2);
+        let mut updated = value.clone();
+        updated.game_bar.font_size = 24.0;
+        assert_eq!(updated.position, value.position);
+        assert_eq!(updated.font_size, 61.0);
+        assert!(updated.validate().is_ok());
+        updated.game_bar.font_size = f64::NAN;
+        assert!(updated.validate().is_err());
     }
 }

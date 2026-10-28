@@ -8,13 +8,13 @@ Live cards do not contain K/D, KDA, ACS, HS%, ADR, win rate or historical perfor
 
 ![Live match preview using sample data](assets/match-overview.png)
 
-## Agent preferences
+## Instalock
 
-Choose a default agent or a map-specific preference. The existing portrait grid and character artwork help you see the current selection. Automatic locking has an on/off control and a configurable delay. Agent preferences persist between launches.
+Open **Instalock** to choose a default agent or a map-specific preference. The delay control sits directly below the portraits. The existing portrait grid and character artwork help you see the current selection. Automatic locking has an on/off control and a configurable delay. Agent preferences persist between launches.
 
 ## Visual Spike timer
 
-The timer follows the planted-Spike icon in the game HUD and displays a compact countdown on the game monitor. A visual editor lets you drag it, change text size and background opacity, and restore defaults; preferences save automatically. Placement follows the physical game viewport and monitor DPI. It resets at round end. This system uses visual detection; there is no sound-recording setup.
+The dedicated **Spike Timer** page controls a compact countdown detected from the planted-Spike HUD icon. Windowed modes use the desktop overlay and its visual editor; Fullscreen uses an optional Game Bar widget. Change its size/background independently and position it by dragging it in Win + G. Component setup asks for consent before installation. The widget minimizes its actual window when idle and restores it on plant. Preferences save automatically, and the countdown resets at round end. There is no audio-calibration step.
 
 Countdown colors reflect estimated time remaining for a full or half defuse, rather than detecting whether someone has started defusing.
 

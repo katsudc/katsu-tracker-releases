@@ -16,13 +16,13 @@ The history covers up to 20 accessible Competitive matches. Initial loading and 
 
 ## The Spike countdown does not appear
 
-1. Enable **Spike timer** in settings.
-2. Use **Borderless Windowed / Windowed Fullscreen** in VALORANT.
-3. Keep the game HUD visible and let the game remain in the foreground.
-4. On a multi-monitor setup, check the display that contains the game.
-5. Use **Edit overlay → Reset position & style** if an old custom position or size is unsuitable.
+1. Open **Spike Timer** and enable the timer.
+2. Keep the HUD visible and the game in the foreground. Test a new plant after starting the application.
+3. In windowed modes, check the game monitor and use **Edit overlay → Reset position & style** if needed.
+4. In Fullscreen, approve component setup and pin **katsu’s Tracker** in **Win + G**. Check that Xbox Game Bar is enabled in Windows if Win + G does not open.
+5. To reposition the Fullscreen widget, drag it while Win + G is open. Check the real click-through status in **Spike Timer → Game Bar** and close the Game Bar menu after editing.
 
-The app refreshes its own topmost placement without focusing or altering the game. An external desktop window cannot guarantee visibility over a true exclusive-fullscreen surface; use a Windows-composed fullscreen mode.
+The idle widget is minimized, not merely transparent. If a widget seems stuck over another app, check that the Game Bar menu is closed and click-through is enabled. Windows policy or Store/WinGet restrictions can prevent component setup; use the displayed error rather than repeatedly adding certificates.
 
 The detector uses the planted-Spike HUD icon. Changing microphone or recording settings will not help this visual detector. Defuse progress is not measured.
 

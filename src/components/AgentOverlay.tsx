@@ -12,13 +12,13 @@ interface Preview {
   loading: boolean;
 }
 
-export const AgentOverlay = memo(function AgentOverlay() {
+export const AgentOverlay = memo(function AgentOverlay({ enabled = false }: { enabled?: boolean }) {
   const { hoveredAgent, isOpen, panelType } = usePanelStore(useShallow(s => ({ hoveredAgent:s.hoveredAgent, isOpen:s.isOpen, panelType:s.panelType })));
   const { t } = useI18n();
   const [preview, setPreview] = useState<Preview | null>(null);
   const current = useRef<Preview | null>(null);
   current.current = preview;
-  const active = isOpen && panelType === "settings";
+  const active = enabled || (isOpen && panelType === "settings");
 
   useEffect(() => {
     if (!active) { setPreview(null); return; }
@@ -50,7 +50,7 @@ export const AgentOverlay = memo(function AgentOverlay() {
   const { agent, portrait, splash, loading } = preview;
   const color = agent.mapContext?.mapColor || "var(--color-accent-cyan)";
   const mapOnly = agent.mapOnly === true;
-  return <div className="agent-preview" data-agent-preview data-agent-name={agent.name}>
+  return <div className={`agent-preview${enabled ? " agent-preview-feature" : ""}${enabled && agent.mapContext ? " is-map-context" : ""}`} data-agent-preview data-agent-name={agent.name}>
     {splash && <img key={splash} src={splash} alt="" decoding="async" draggable={false} className={`agent-preview-map ${mapOnly ? "is-map-only" : ""}`}/>}
     <div className="agent-preview-shade"/>
     <div className="agent-preview-frame" style={{ borderColor:color }}/>

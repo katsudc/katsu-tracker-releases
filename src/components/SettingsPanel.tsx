@@ -11,7 +11,6 @@ import { COMPETITIVE_MAPS, CompetitiveMap, MAP_METADATA } from "../lib/maps";
 import { getVersion } from "@tauri-apps/api/app";
 import { invoke } from "@tauri-apps/api/core";
 import { CachedImage } from "./CachedImage";
-import { SpikeSettings } from "./SpikeTimer";
 import { PresetsTab } from "./PresetsTab";
 import { invokeCommand } from "../utils/ipc";
 import {
@@ -25,9 +24,7 @@ import {
   Info,
   Keyboard,
   Languages,
-  Settings2,
   SlidersHorizontal,
-  UserRound,
   type LucideIcon,
 } from "lucide-react";
 import type { ReactNode } from "react";
@@ -54,8 +51,6 @@ function buildHotkeyString(e: KeyboardEvent): string | null {
   parts.push(normalizedKey);
   return parts.join("+");
 }
-
-type Tab = "autolock" | "general";
 
 function DiscordIcon({ className }: { className?: string }) {
   return (
@@ -166,7 +161,8 @@ function Segmented<T extends string>({
   );
 }
 
-export function SettingsPanel() {
+export function SettingsPanel({ section = "general" }: { section?: "general" | "instalock" }) {
+  const activeTab = section === "instalock" ? "autolock" : "general";
   const { autoLockAgent, setAutoLock, mapAgentPreferences } = useGameStore(useShallow(s => ({autoLockAgent:s.autoLockAgent,setAutoLock:s.setAutoLock,mapAgentPreferences:s.mapAgentPreferences})));
   const { theme,setTheme,hotkey,setHotkey,pauseHotkey,resumeHotkey,windowStyle,setWindowStyle,autoLockDelaySeconds,setAutoLockDelaySeconds,discordRpcEnabled,setDiscordRpcEnabled,minimizeToTray,setMinimizeToTray } = useSettingsStore(useShallow(s => ({theme:s.theme,setTheme:s.setTheme,hotkey:s.hotkey,setHotkey:s.setHotkey,pauseHotkey:s.pauseHotkey,resumeHotkey:s.resumeHotkey,windowStyle:s.windowStyle,setWindowStyle:s.setWindowStyle,autoLockDelaySeconds:s.autoLockDelaySeconds,setAutoLockDelaySeconds:s.setAutoLockDelaySeconds,discordRpcEnabled:s.discordRpcEnabled,setDiscordRpcEnabled:s.setDiscordRpcEnabled,minimizeToTray:s.minimizeToTray,setMinimizeToTray:s.setMinimizeToTray})));
   const { getAgentIcon, getAgentAsset, getMapSplash, getMapThumbnail, loadAssets, agents: assetAgents } = useAssetsStore(useShallow(s => ({getAgentIcon:s.getAgentIcon,getAgentAsset:s.getAgentAsset,getMapSplash:s.getMapSplash,getMapThumbnail:s.getMapThumbnail,loadAssets:s.loadAssets,agents:s.agents})));
@@ -174,8 +170,10 @@ export function SettingsPanel() {
   const { constants } = useConstantsStore();
   const { settingsSubView, setSettingsSubView, setHoveredAgent } = usePanelStore(useShallow(s => ({settingsSubView:s.settingsSubView,setSettingsSubView:s.setSettingsSubView,setHoveredAgent:s.setHoveredAgent})));
 
-  const [activeTab, setActiveTab] = useState<Tab>("autolock");
   const [recording, setRecording] = useState(false);
+  const recordingRef = useRef(false);
+  recordingRef.current = recording;
+  useEffect(() => () => { if (recordingRef.current) void resumeHotkey(); }, [resumeHotkey]);
   const [recordingDisplay, setRecordingDisplay] = useState("");
   const [hotkeyError, setHotkeyError] = useState<string | null>(null);
   const [appVersion, setAppVersion] = useState("...");
@@ -187,28 +185,30 @@ export function SettingsPanel() {
   const previewTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    if (section !== "general") return;
     getVersion().then(setAppVersion);
     invokeCommand<number | null>("get_install_count", undefined, { suppressErrorToast: true })
       .then((n) => {
         if (typeof n === "number" && Number.isFinite(n)) setInstalls(n);
       })
       .catch(() => {});
-  }, []);
+  }, [section]);
 
   const formattedInstalls =
     installs !== null ? installs.toLocaleString(locale === "tr" ? "tr-TR" : "en-US") : "";
 
   // If a previous failed load left us with empty icons, retry when settings opens
   useEffect(() => {
-    if (assetAgents.size === 0) {
+    if (section === "instalock" && assetAgents.size === 0) {
       void loadAssets();
     }
-  }, [assetAgents.size, loadAssets]);
+  }, [section, assetAgents.size, loadAssets]);
 
   useEffect(() => {
     return () => {
       if (mapOnlyRestoreRef.current) clearTimeout(mapOnlyRestoreRef.current);
       if (previewTimerRef.current) clearTimeout(previewTimerRef.current);
+      setHoveredAgent(null);
     };
   }, []);
 
@@ -346,35 +346,16 @@ export function SettingsPanel() {
   }, [recording, handleHotkeyRecord]);
 
   // Nested editor views (after all hooks — rules of hooks).
-  if (settingsSubView === "presets") {
+  if (section === "general" && settingsSubView === "presets") {
     return <PresetsTab />;
   }
 
   return (
-    <div className="flex flex-col h-full bg-dark/40">
-      {/* Tabs: Agent | Options */}
-      <div className="flex px-2 border-b border-white/[0.06]">
-        {([
-          ["autolock", UserRound, t("settings.tabAgent")],
-          ["general", Settings2, t("settings.title")],
-        ] as const).map(([tab, Icon, label]) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`relative flex-1 h-9 flex items-center justify-center gap-1.5 text-[10px] font-bold uppercase tracking-wide whitespace-nowrap transition-colors cursor-pointer after:absolute after:inset-x-3 after:-bottom-px after:h-0.5 after:rounded-full after:transition-colors ${
-              activeTab === tab ? "text-accent-cyan after:bg-accent-cyan" : "text-secondary hover:text-primary after:bg-transparent"
-            }`}
-          >
-            <Icon className="w-3.5 h-3.5" strokeWidth={2.4} />
-            {label}
-          </button>
-        ))}
-      </div>
-
+    <div className={`flex flex-col h-full bg-dark/40 ${section === "instalock" ? "instalock-settings" : ""}`} data-settings-section={section}>
       <div className="flex-1 overflow-y-auto min-h-0 selection:bg-accent-cyan/30">
         {activeTab === "autolock" ? (
           /* Agent Selection Tab - Map-based */
-          <div className="flex flex-col h-full">
+          <div className="instalock-controls">
             {/* Global Default Section */}
             <div className="p-4 bg-linear-to-b from-white/5 to-transparent border-b border-white/5">
               <div className="flex items-center justify-between mb-3">
@@ -542,7 +523,6 @@ export function SettingsPanel() {
         ) : (
           /* General Settings Tab — grouped rows */
           <div className="pb-3">
-            <SpikeSettings />
             <SettingsGroup title={t("settings.sectionAppearance")}>
               <div className="theme-picker"><span>{t("desktop.theme")}</span><div>{THEMES.map(option=><button key={option} data-theme-option={option} className={theme===option?"selected":""} onClick={()=>setTheme(option)} title={t(`theme.${option}`)} aria-label={t(`theme.${option}`)} aria-pressed={theme===option}><i/>{theme===option&&<span>✓</span>}</button>)}</div></div>
               <SettingsRow
@@ -665,8 +645,8 @@ export function SettingsPanel() {
         )}
       </div>
 
-      {/* Footer / Attribution - Always visible */}
-      <div className="p-2 border-t border-border">
+      {/* General settings attribution */}
+      {section === "general" && <div className="p-2 border-t border-border">
         <p className="text-[9px] text-secondary text-center">
           {t("settings.madeBy")}{" "}
           <a
@@ -680,7 +660,7 @@ export function SettingsPanel() {
             @katsudc
           </a>
         </p>
-      </div>
+      </div>}
     </div>
   );
 }

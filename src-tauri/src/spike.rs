@@ -267,6 +267,7 @@ fn display_worker(app: tauri::AppHandle, state: Spike) {
     let mut last_placement = None;
     let mut last_request = (false, false);
     let mut game = None;
+    let mut game_bar_output = false;
     let mut last_game_check = Instant::now()-Duration::from_secs(1);
     let mut last_check = Instant::now()-Duration::from_secs(1);
     while !state.stop.load(Ordering::Relaxed) {
@@ -275,11 +276,14 @@ fn display_worker(app: tauri::AppHandle, state: Spike) {
         if last_game_check.elapsed() >= Duration::from_millis(500) {
             game = crate::spike_display::game_monitor();
             state.game_visible.store(game.is_some(), Ordering::Relaxed);
+            let (enabled,remaining,demo,icon_status,icon_score) = {let s=state.inner.lock();(s.enabled,s.timer.map(|t|signal::remaining(t.elapsed().as_secs_f64())),s.demo,s.icon_status.clone(),s.icon_similarity)};
+            let scale=game.map(|bounds|crate::spike_display::target_scale(bounds,&w.available_monitors().unwrap_or_default())).unwrap_or(1.0);
+            game_bar_output=crate::spike_gamebar::sync(&app,enabled,remaining,demo,game,scale,&crate::spike_appearance::current(&app),&icon_status,icon_score);
             last_game_check = Instant::now();
         }
         let request = {
             let s = state.inner.lock();
-            (s.timer.is_some_and(|t|t.elapsed().as_secs_f64()<signal::FUSE_SECONDS), s.demo)
+            (s.timer.is_some_and(|t|t.elapsed().as_secs_f64()<signal::FUSE_SECONDS) && !game_bar_output, s.demo)
         };
         if !request.0 {
             if shown {

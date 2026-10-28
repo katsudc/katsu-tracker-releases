@@ -1,6 +1,6 @@
 [package]
 name = "valorant-tracker"
-version = "1.9.6-personal.38"
+version = "1.9.6-personal.45"
 description = "katsu's Tracker"
 authors = ["katsu"]
 edition = "2021"
@@ -55,6 +55,11 @@ windows-core = "0.61"
 windows = { version = "0.58", features = [
     "Foundation",
     "Foundation_Collections",
+    "ApplicationModel",
+    "Management_Deployment",
+    "System",
+    "Gaming_UI",
+    "Win32_System_Performance",
     "Media_Control",
     "Storage_Streams",
     "Win32_System_WinRT",

@@ -93,7 +93,7 @@ export function SpikeOverlayEditor({onClose}:{onClose:()=>void}) {
         <label>{t("spike.background")}<output>{Math.round(value.background_opacity*100)}%</output><input aria-label={t("spike.background")} disabled={!ready} type="range" min="0" max="1" step="0.01" value={value.background_opacity} onChange={e=>change({...value,background_opacity:Number(e.target.value)})}/></label>
       </div>
       <p className="spike-editor-note">{context.width} × {context.height} · {t(context.game_found?"spike.gamePreview":"spike.samplePreview")} · {t("spike.colorHint")}</p>
-      <footer><button disabled={!ready} onClick={()=>change({...DEFAULT_APPEARANCE})}><RotateCcw size={14}/>{t("spike.reset")}</button>
+      <footer><button disabled={!ready} onClick={()=>change({...DEFAULT_APPEARANCE,game_bar:latest.current.game_bar})}><RotateCcw size={14}/>{t("spike.reset")}</button>
         <span role="status" className={error?"spike-editor-error":""}>{t(error?"spike.saveError":saving?"spike.saving":"spike.saved")}</span>
         <button ref={doneButton} disabled={!ready} className="spike-editor-done" onClick={()=>void close()}><Check size={14}/>{t("spike.done")}</button></footer>
     </section>

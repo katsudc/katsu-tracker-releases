@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][string]$OutputDirectory)
+param([Parameter(Mandatory=$true)][string]$OutputDirectory, [Parameter(Mandatory=$true)][ValidatePattern('^[a-fA-F0-9]{40}$')][string]$TargetCommit)
 $ErrorActionPreference='Stop'
 & (Join-Path $PSScriptRoot 'check_source_secrets.ps1')
 $OutputDirectory=(Resolve-Path -LiteralPath $OutputDirectory).Path
@@ -34,18 +34,9 @@ try {
  $newParts=$version -split '-personal\.'
  if ([Version]$newParts[0] -lt $latestCore -or ([Version]$newParts[0] -eq $latestCore -and [int]$newParts[1] -le $latestSequence)) {throw 'Increment the application version before publishing'}
 } catch {if ($_.Exception.Response -and [int]$_.Exception.Response.StatusCode -eq 404) {} else {throw}}
-$readme=Get-Content -LiteralPath (Join-Path $PSScriptRoot '../docs/release-readme.md') -Raw -Encoding utf8
-$currentReadme=Invoke-RestMethod "https://api.github.com/repos/$repo/contents/README.md" -Headers $headers
-$readmeBody=@{message='Document installation and signed update channel';sha=$currentReadme.sha;content=[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($readme))} | ConvertTo-Json
-$null=Invoke-RestMethod "https://api.github.com/repos/$repo/contents/README.md" -Headers $headers -Method Put -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($readmeBody))
-$licenseText=Get-Content -LiteralPath (Join-Path $PSScriptRoot '../LICENSE') -Raw -Encoding utf8
-$licenseBody=@{message='Update katsu project license';content=[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($licenseText))}
-try {
- $currentLicense=Invoke-RestMethod "https://api.github.com/repos/$repo/contents/LICENSE" -Headers $headers
- $licenseBody.sha=$currentLicense.sha
-} catch {if ($_.Exception.Response -and [int]$_.Exception.Response.StatusCode -eq 404) {} else {throw}}
-$null=Invoke-RestMethod "https://api.github.com/repos/$repo/contents/LICENSE" -Headers $headers -Method Put -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes(($licenseBody | ConvertTo-Json)))
-$body=@{tag_name="v$version";target_commitish='main';name="katsu's Tracker $version";draft=$true;prerelease=$false;body=$manifest.notes} | ConvertTo-Json
+$mainRef=Invoke-RestMethod "https://api.github.com/repos/$repo/git/ref/heads/main" -Headers $headers
+if($mainRef.object.sha -ne $TargetCommit){throw 'Push the reviewed source commit to main before publishing its release'}
+$body=@{tag_name="v$version";target_commitish=$TargetCommit;name="katsu's Tracker $version";draft=$true;prerelease=$false;body=$manifest.notes} | ConvertTo-Json
 $release=Invoke-RestMethod "https://api.github.com/repos/$repo/releases" -Headers $headers -Method Post -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body))
 foreach($name in $assets) {
  $url="https://uploads.github.com/repos/$repo/releases/$($release.id)/assets?name=$([Uri]::EscapeDataString($name))"

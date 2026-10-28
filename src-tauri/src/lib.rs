@@ -2,6 +2,8 @@ mod media;
 mod updates;
 mod update_worker;
 mod spike_appearance;
+mod spike_gamebar;
+mod spike_screen_mode;
 mod agent_catalog;
 mod api;
 mod spike;
@@ -139,8 +141,12 @@ pub fn run() -> RunResult {
             updates::get_update_status,
             updates::check_for_updates,
             updates::apply_update,
+            spike_gamebar::get_spike_output_status,
+            spike_gamebar::prepare_spike_game_bar,
+            spike_gamebar::open_spike_game_bar,
             spike_appearance::get_spike_appearance,
             spike_appearance::set_spike_appearance,
+            spike_appearance::set_spike_gamebar_appearance,
             spike_appearance::get_spike_editor_context,
             media::media_status,
             media::media_control,
@@ -227,6 +233,7 @@ pub fn run() -> RunResult {
             }
 
             spike_appearance::setup(app.handle())?;
+            spike_gamebar::setup(app.handle())?;
             spike::setup(app.handle())?;
             media::setup(app.handle())?;
             tracker::setup(app.handle())?;
@@ -264,6 +271,7 @@ pub fn run() -> RunResult {
         .on_window_event(|window, event| {
             if window.label() != "main" { return; }
             if window.label() == "main" && matches!(event, tauri::WindowEvent::Destroyed) {
+                spike_gamebar::shutdown(window.app_handle());
                 spike::shutdown(window.app_handle());
                 window.app_handle().exit(0);
             }
@@ -278,7 +286,7 @@ pub fn run() -> RunResult {
         })
         .build(context)
         .expect("error while building tauri application")
-        .run(|app, event| { if matches!(event, tauri::RunEvent::Exit) { spike::shutdown(app); } });
+        .run(|app, event| { if matches!(event, tauri::RunEvent::Exit) { spike_gamebar::shutdown(app); spike::shutdown(app); } });
 
     RunResult::Completed
 }

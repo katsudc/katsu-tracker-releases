@@ -14,7 +14,10 @@ if ($ToolchainRoot) {
 pnpm.cmd install --frozen-lockfile --ignore-scripts
 if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed' }
 
-pnpm.cmd exec tauri build --no-bundle -- --locked
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'build_gamebar.ps1') -SignWithLocalTestCertificate
+if ($LASTEXITCODE -ne 0) { throw 'Widget build failed' }
+
+node (Join-Path $projectRoot 'node_modules/@tauri-apps/cli/tauri.js') build --no-bundle -- --locked
 if ($LASTEXITCODE -ne 0) { throw 'Application build failed' }
 
 cargo test --release --locked --manifest-path src-tauri/Cargo.toml --lib

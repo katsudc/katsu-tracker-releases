@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
-export type SpikeAppearance = { position: { x:number; y:number } | null; font_size:number; background_opacity:number };
+export type GameBarAppearance = { font_size:number; background_opacity:number };
+export type SpikeAppearance = { game_bar?:GameBarAppearance; position: { x:number; y:number } | null; font_size:number; background_opacity:number };
 export const DEFAULT_APPEARANCE:SpikeAppearance = { position:null, font_size:30, background_opacity:0.78 };
 export function useSpikeAppearance() {
   const [appearance,setAppearance]=useState(DEFAULT_APPEARANCE);

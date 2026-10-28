@@ -5,6 +5,8 @@ import "./spike.css";
 import { useI18n } from "../lib/i18n";
 import { useSpikeAppearance } from "./spikeAppearance";
 import { SpikeOverlayEditor } from "./SpikeOverlayEditor";
+import { SpikeOutputSettings } from "./SpikeOutputSettings";
+import { GameBarAppearanceSettings } from "./GameBarAppearanceSettings";
 
 type Status = {
   icon_enabled:boolean; icon_status:string; icon_similarity:number;
@@ -60,10 +62,19 @@ export function SpikeSettings() {
     finally {setBusy(false);}
   }
   return <section className="spike-settings spike-simple">
-    <div className="spike-setting-heading"><h3>SPIKE TIMER</h3>
+    <div className="spike-setting-heading"><h3>{t("spike.title")}</h3>
       <button role="switch" aria-label="Spike timer" aria-checked={s.enabled} disabled={busy}
         onClick={()=>void run("spike_set_enabled",{enabled:!s.enabled})}>{t(s.enabled ? "spike.on" : "spike.off")}</button></div>
-    <button className="spike-edit-button" onClick={()=>setEditing(true)}>{t("spike.edit")}</button>
+    <section className="spike-display-card" aria-label={t("spike.windowedTitle")}>
+      <h4>{t("spike.windowedTitle")}</h4><p>{t("spike.windowedDescription")}</p>
+      <button className="spike-edit-button" onClick={()=>setEditing(true)}>{t("spike.edit")}</button>
+    </section>
+    <section className="spike-display-card" aria-label={t("spike.gameBarTitle")}>
+      <h4>{t("spike.gameBarTitle")}</h4>
+      <SpikeOutputSettings/>
+      <GameBarAppearanceSettings/>
+      <p className="spike-gamebar-move">{t("spike.gameBarMoveHint")}</p>
+    </section>
     {editing && <SpikeOverlayEditor onClose={()=>setEditing(false)}/>}
     {error && <p role="alert" className="spike-warning">{error}</p>}
   </section>;

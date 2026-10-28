@@ -1,4 +1,4 @@
-param([string]$ToolchainRoot='', [string]$OutputDirectory='')
+param([string]$ToolchainRoot='', [string]$OutputDirectory='', [string]$NotesPath='')
 $ErrorActionPreference='Stop'
 $projectRoot=Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $projectRoot
@@ -22,7 +22,7 @@ $secure=Get-Content (Join-Path $keyDirectory 'password.dpapi') -Raw | ConvertTo-
 $env:TAURI_SIGNING_PRIVATE_KEY=$keyPath
 $env:TAURI_SIGNING_PRIVATE_KEY_PASSWORD=[System.Net.NetworkCredential]::new('', $secure).Password
 try {
- pnpm.cmd exec tauri build --bundles nsis -- --locked
+ node (Join-Path $projectRoot 'node_modules/@tauri-apps/cli/tauri.js') build --bundles nsis -- --locked
  if ($LASTEXITCODE -ne 0) {throw 'Signed application build failed'}
 } finally {
  Remove-Item Env:TAURI_SIGNING_PRIVATE_KEY -ErrorAction SilentlyContinue
@@ -35,8 +35,11 @@ if (-not (Test-Path -LiteralPath $signaturePath)) {throw 'Updater signature is m
 Copy-Item -LiteralPath $installer.FullName -Destination (Join-Path $OutputDirectory 'Katsu-Tracker-setup.exe')
 Copy-Item -LiteralPath $signaturePath -Destination (Join-Path $OutputDirectory 'Katsu-Tracker-setup.exe.sig')
 Copy-Item -LiteralPath 'LICENSE' -Destination (Join-Path $OutputDirectory 'LICENSE.txt')
+if(-not $NotesPath){$NotesPath=Join-Path $projectRoot "docs/releases/$version.md"}
+if(-not(Test-Path -LiteralPath $NotesPath)){throw 'Release notes are missing'}
+$releaseNotes=Get-Content -LiteralPath $NotesPath -Raw -Encoding utf8
 $manifest=@{
- version=$version; notes='Remove the redundant bottom-right update icon. The new update notification remains the single update control; download progress, silent installation and automatic restart are unchanged.'
+ version=$version; notes=$releaseNotes.Trim()
  pub_date=[DateTime]::UtcNow.ToString('o')
  platforms=@{'windows-x86_64'=@{
   signature=(Get-Content -LiteralPath $signaturePath -Raw).Trim()

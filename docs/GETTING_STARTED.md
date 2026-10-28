@@ -21,20 +21,26 @@ No external statistics API key or separate tracker account is required.
 | Setting | Where to start |
 | --- | --- |
 | Overlay shortcut | **F2** shows or hides the main window. |
-| Default agent | Open **Options → Agent** and choose a portrait. |
+| Default agent | Open **Instalock** and choose a portrait. |
 | Per-map agent | Choose the preferred agent for each map in the same panel. |
 | Lock delay | Set the delay in the agent settings; keep the auto-lock switch off when you do not want it to run. |
-| Theme & language | Open the settings tab to choose an accent and English or Turkish. |
+| Theme & language | Open **Options** to choose an accent and English or Turkish. |
 | Window position | Use the movable window mode and place the main window where it suits your setup. |
-| Spike timer | Enable **Spike timer** and use **Edit overlay** to position or restyle the countdown. |
+| Spike timer | Open **Spike Timer**. Use **Edit overlay** for windowed modes, or the Game Bar section for Fullscreen. |
 
 Preferences are saved automatically.
 
 ## Spike timer
 
-The countdown follows the game viewport and monitor, including mixed-DPI and non-native resolutions. **Borderless Windowed / Windowed Fullscreen** is the most reliable display mode; true exclusive fullscreen can hide external windows. The detector watches the planted-Spike HUD icon near the top of the game view; keep that HUD visible. The countdown appears on the game monitor and resets at round end.
+In windowed modes, the countdown follows the game viewport and monitor, including mixed-DPI and non-native resolutions. In Fullscreen, it uses the optional Game Bar widget. Detection watches the planted-Spike HUD icon; keep the HUD visible. The countdown resets at round end.
 
-Open **Options → Spike timer → Edit overlay** to drag the seconds to a new position. Use the corner handle or **Text size** slider to resize, and **Background opacity** for contrast. Arrow keys move the focused timer; Shift + arrow moves farther. Changes save automatically. **Reset position & style** restores the default.
+Open **Spike Timer → Windowed Fullscreen → Edit overlay** to drag the seconds, resize them or change background opacity. Arrow keys move the focused timer; Shift + arrow moves farther. Changes save automatically.
+
+For Fullscreen, approve component setup if offered. Nothing is downloaded or installed before approval. The widget and public signing certificate are bundled; Windows may request administrator approval to add that certificate to the computer’s Trusted People store. If Xbox Game Bar is missing, setup obtains it through Microsoft Store/WinGet. The private signing key is never distributed.
+
+Press **Win + G** and pin **katsu’s Tracker** once. Drag it while Game Bar is open to set its position; the menu shows a 45.0 preview. Enable Game Bar’s mouse click-through and close the menu to pass clicks through the active countdown. The application shows the actual Windows-reported setting. When no countdown is running, the widget’s real window is minimized so no invisible input area remains. Font size and background are saved independently from the windowed editor.
+
+See [Game Bar setup and architecture](GAME_BAR.md) for details.
 
 The countdown is a timing estimate. Its colors indicate whether the remaining time allows a full defuse, only a half defuse, or neither; it does not observe actual defuse progress. Detection is visual and does not require audio calibration.
 
