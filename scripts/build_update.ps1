@@ -36,7 +36,7 @@ Copy-Item -LiteralPath $installer.FullName -Destination (Join-Path $OutputDirect
 Copy-Item -LiteralPath $signaturePath -Destination (Join-Path $OutputDirectory 'Katsu-Tracker-setup.exe.sig')
 Copy-Item -LiteralPath 'LICENSE' -Destination (Join-Path $OutputDirectory 'LICENSE.txt')
 $manifest=@{
- version=$version; notes='Visible startup update checks, explicit downloads with real progress, signature verification and a silent background installer with automatic restart. Customize the Spike countdown position, text size and opacity in a saved visual editor. Game-viewport/DPI placement and topmost handling improved; visual Spike detection is unchanged. Source code is now public.'
+ version=$version; notes='Updater verification release: test the startup update notification, real download progress, silent background installation and automatic restart from 1.9.6-personal.36. Application features, visual Spike detection and saved preferences are unchanged.'
  pub_date=[DateTime]::UtcNow.ToString('o')
  platforms=@{'windows-x86_64'=@{
   signature=(Get-Content -LiteralPath $signaturePath -Raw).Trim()

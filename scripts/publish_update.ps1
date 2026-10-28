@@ -45,7 +45,7 @@ try {
  $licenseBody.sha=$currentLicense.sha
 } catch {if ($_.Exception.Response -and [int]$_.Exception.Response.StatusCode -eq 404) {} else {throw}}
 $null=Invoke-RestMethod "https://api.github.com/repos/$repo/contents/LICENSE" -Headers $headers -Method Put -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes(($licenseBody | ConvertTo-Json)))
-$body=@{tag_name="v$version";target_commitish='main';name="katsu's Tracker $version";draft=$true;prerelease=$false;body='Visible startup update checks, explicit downloads with real progress, signature verification and a silent background installer with automatic restart. Customize the Spike countdown position, text size and opacity in a saved visual editor. Game-viewport/DPI placement and topmost handling improved; visual Spike detection is unchanged. Source code is now public.'} | ConvertTo-Json
+$body=@{tag_name="v$version";target_commitish='main';name="katsu's Tracker $version";draft=$true;prerelease=$false;body=$manifest.notes} | ConvertTo-Json
 $release=Invoke-RestMethod "https://api.github.com/repos/$repo/releases" -Headers $headers -Method Post -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body))
 foreach($name in $assets) {
  $url="https://uploads.github.com/repos/$repo/releases/$($release.id)/assets?name=$([Uri]::EscapeDataString($name))"

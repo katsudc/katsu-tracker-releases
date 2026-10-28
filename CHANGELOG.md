@@ -1,5 +1,12 @@
 # Release notes
 
+## 1.9.6-personal.37
+
+- Test release for the signed updater introduced in 1.9.6-personal.36.
+- Verify startup discovery, download progress, silent installation, automatic restart and saved preferences with a real version upgrade.
+- No application-feature, gameplay, visual detector or overlay behavior changes.
+
+
 ## 1.9.6-personal.36
 
 - Show startup update discovery and let the user choose when to download and install.
