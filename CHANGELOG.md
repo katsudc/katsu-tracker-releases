@@ -2,6 +2,13 @@
 
 Installers and complete version history are available in [GitHub Releases](https://github.com/katsudc/katsu-tracker-releases/releases).
 
+## 1.9.6-personal.35
+
+- Reduced redraw work in the agent settings and isolated portrait grids from hover updates.
+- Simplified agent artwork transitions and removed multi-layer glitch effects.
+- Added bounded decoded-preview caching, offscreen map-image deferral and smaller map thumbnails.
+- Kept default/per-map selection immediate and preserved visual Spike detection.
+
 ## 1.9.6-personal.34
 
 - Simplified live player cards to names, agents and ranks with artwork.
