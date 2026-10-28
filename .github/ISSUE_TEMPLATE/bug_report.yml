@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a reproducible problem in katsu's Tracker.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: "Before submitting, check the troubleshooting guide. Remove Riot IDs, credentials, tokens, private messages and keys from screenshots or logs."
+  - type: input
+    id: app_version
+    attributes:
+      label: App version
+      placeholder: 1.9.6-personal.34
+    validations:
+      required: true
+  - type: input
+    id: windows_version
+    attributes:
+      label: Windows version
+      placeholder: Windows edition and build
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Include what you expected and what actually happened.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Open the app..."
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Optional redacted screenshot, display mode or monitor setup.

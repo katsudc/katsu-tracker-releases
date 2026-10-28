@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Setup & troubleshooting
+    url: https://github.com/katsudc/katsu-tracker-releases/blob/main/docs/TROUBLESHOOTING.md
+    about: Check common setup, display and connection questions.
+  - name: Private security report
+    url: https://github.com/katsudc/katsu-tracker-releases/security/advisories/new
+    about: Report a sensitive vulnerability privately.

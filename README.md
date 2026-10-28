@@ -1,59 +1,96 @@
-# katsu's Tracker
+<p align="center">
+  <img src="docs/assets/hero.png" alt="katsu's Tracker — Your match. In focus." width="100%">
+</p>
 
-[English](#english) · [Türkçe](#türkçe)
+<p align="center">
+  <strong>A focused VALORANT companion for Windows.</strong><br>
+  Live ranks. Agent presets. A visual Spike timer. Your music, within reach.
+</p>
 
-## Türkçe
+<p align="center">
+  <a href="https://github.com/katsudc/katsu-tracker-releases/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/katsudc/katsu-tracker-releases?style=flat-square&color=ff8eae&label=release"></a>
+  <img alt="Platform: Windows x64" src="https://img.shields.io/badge/platform-Windows_x64-172132?style=flat-square">
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-172132?style=flat-square"></a>
+</p>
 
-VALORANT için katsu tarafından geliştirilen Windows masaüstü arayüzü.
+<p align="center">
+  <a href="https://github.com/katsudc/katsu-tracker-releases/releases/latest/download/Katsu-Tracker-setup.exe"><strong>Download for Windows</strong></a>
+  &nbsp;·&nbsp; <a href="#features">Features</a>
+  &nbsp;·&nbsp; <a href="#a-closer-look">Screenshots</a>
+  &nbsp;·&nbsp; <a href="docs/GETTING_STARTED.md">Get started</a>
+  &nbsp;·&nbsp; <a href="SUPPORT.md">Support</a>
+</p>
 
-- Canlı maçta oyuncu adları, ajanlar ve rütbeler; mevcut kaplama görünümü korunur.
-- Haritaya göre ajan seçimi ve otomatik kilitleme tercihleri.
-- Spike simgesini izleyen, oyun monitöründe görünen sade sayaç.
-- Beş renk teması, Türkçe/İngilizce arayüz ve otomatik kaydedilen tercihler.
-- Windows Spotify uygulaması için şarkı bilgisi, kapak, oynatma ve yalnızca Spotify’a özel ses kontrolü.
-- Ajan, harita ve saldırı/savunma filtreleriyle uygulama içinde Tracker.gg lineup videoları.
-- Son 5/10/20 maç, skor tabloları, ajan/harita istatistikleri ve maç sonu özeti.
-- Kendi profilin için mevcut Riot oturumundan alınan veriler ve çevrimdışı önbellek.
-- İmzalı otomatik güncellemeler.
+---
 
-[Windows kurulumunu indir](https://github.com/katsudc/katsu-tracker-releases/releases/latest/download/Katsu-Tracker-setup.exe)
+## Your match, at a glance
 
-İlk kurulumdan sonra yeni sürümler arka planda indirilir. Güncelleme hazır olduğunda VALORANT kapalıyken bildirim düğmesinden kurabilir veya tracker’ı sonraki açışında yükletebilirsin. Ayarların korunur.
+Keep player names, agents and available ranks in one clean view. Set your preferred agents by map, bring Spotify controls closer, and keep the Spike countdown readable without filling your screen.
 
-Kendi profilindeki KDA / HS% / WR değerleri erişilebilen en fazla son 20 rekabetçi maça aittir. Veriler aşamalı yüklenir; tamamlanana kadar işlenen maç sayısı gösterilir. Tracker Score veya tüm zamanlar istatistikleri değildir. Spotify için Windows masaüstü uygulamasında bir şarkı açmak yeterlidir; tracker içinde hesap girişi gerekmez.
+Your personal match history stays useful between games. Preferences are saved automatically, so you can open the app and get back to playing.
 
-Oyuncu rütbeleri mevcut Riot oturumundaki maç verisi ve MMR yanıtlarından alınır. Bilinen bir rütbe yoksa tahmin yapılmaz: doğrulanmış derecesiz hesap ile rütbesi alınamayan hesap ayrı gösterilir. Profilin ilk kez bulunması için VALORANT ile bir kez bağlanmak gerekir. Kendi istatistiklerin en fazla 20 erişilebilir rekabetçi maçla sınırlıdır. Canlı oyuncu kartlarında KDA, ACS, HS%, WR veya geçmiş performans gösterilmez; rakip geçmişi sorgulanmaz. API anahtarı veya ek istatistik servisi hesabı gerekmez.
+## Features
 
-Bu GitHub deposu şu anda kurulum dosyaları ve güncellemeler içindir. Kaynak kod bu dağıtım deposunda henüz yayımlanmamıştır.
+| Feature | What it brings to your setup |
+| :--- | :--- |
+| **Live match overview** | Both teams, available player identities, agents and rank icons. Confirmed unranked accounts and unavailable ranks have distinct labels. |
+| **Agent presets** | A default agent, map-specific choices and a configurable automatic-lock delay. |
+| **Visual Spike timer** | A compact countdown triggered by the planted-Spike HUD icon, displayed on the game monitor and reset when the round ends. |
+| **Spotify mini-player** | Track information, artwork, progress, previous/play/next and Spotify-only volume in an expandable player. |
+| **Personal history & insights** | Your last 5, 10 or 20 accessible Competitive matches, personal performance trends and agent/map breakdowns. |
+| **Community lineups** | Browse Tracker.gg guides with agent, map and attack/defense filters. |
+| **Make it yours** | Five accent themes, English and Turkish UI, saved settings and a movable desktop window. |
+| **Verified updates** | Automatic update downloads with updater-signature verification. Install when VALORANT is closed. |
 
-## English
+[Explore the features →](docs/FEATURES.md)
 
-A Windows desktop companion for VALORANT, maintained by katsu.
+## A closer look
 
-- Live player names, agents and ranks; existing weapon-skin views remain available.
-- Per-map agent selection and automatic locking preferences.
-- A compact timer triggered by the planted-spike HUD icon on the game monitor.
-- Five accent themes, Turkish/English UI and saved preferences.
-- Spotify desktop track metadata, artwork, playback controls and Spotify-only volume.
-- In-app Tracker.gg lineup guides filtered by agent, map and attack/defense.
-- Last 5/10/20 matches, scoreboards, agent/map statistics and post-match recap.
-- Your own profile statistics from the current Riot session, with offline caching.
-- Signed automatic updates.
+### A cleaner live match view
 
-[Download for Windows](https://github.com/katsudc/katsu-tracker-releases/releases/latest/download/Katsu-Tracker-setup.exe)
+![Live match overview with player names, agents and available ranks](docs/assets/match-overview.png)
 
-After the first installation, new versions download in the background. Install a ready update using its notification while VALORANT is closed, or let it install when you next open the tracker. Existing preferences are preserved.
+### Set your agent. Keep your music close.
 
-Your own stats load progressively, with the processed match count shown until completion. KDA / HS% / WR cover up to 20 accessible recent Competitive matches, not lifetime statistics or Tracker Score. To enable music controls, play a track in the Windows Spotify desktop app; no Spotify sign-in inside the tracker is required.
+![Agent selection with artwork and an expanded Spotify mini-player](docs/assets/agent-and-music.png)
 
-Player ranks come from match data and MMR responses in the existing Riot session. Missing rank information is not guessed: confirmed unranked accounts and unavailable ranks are shown separately. Connect to VALORANT once to identify your profile. Your own statistics cover up to 20 accessible Competitive matches. Live player cards do not display KDA, ACS, HS%, WR or past performance; opponent history is not queried. No API key or external statistics account is required.
+<sub>Application previews use sample player and music data. The interface is rendered from the actual application; generated artwork is used for the cover and brand mark.</sub>
 
-This GitHub repository currently distributes installers and updates. Source code has not yet been published in this distribution repository.
+## Get started
 
-## License / Lisans
+1. [Download the latest Windows installer](https://github.com/katsudc/katsu-tracker-releases/releases/latest/download/Katsu-Tracker-setup.exe).
+2. Install and launch **katsu's Tracker**.
+3. Open Riot Client and VALORANT normally. The tracker connects to the existing session.
+4. Press **F2** to show or hide the main window. Choose your agent preferences and theme in **Options**.
 
-Built upon [ruwiss/valorant-tracker](https://github.com/ruwiss/valorant-tracker), under the MIT license. Original copyright notices are retained; modifications are credited to katsu. See LICENSE.txt in each release.
+Use **Borderless Windowed / Windowed Fullscreen** for the overlay. The visual Spike detector needs the HUD to remain visible. To use music controls, play a track in the Windows Spotify desktop app.
 
-Temel proje MIT lisanslıdır. Özgün telif bildirimleri korunur; katsu’nun değişiklikleri ayrıca belirtilir. Her sürümde LICENSE.txt bulunur.
+[Installation & setup](docs/GETTING_STARTED.md) · [Troubleshooting](docs/TROUBLESHOOTING.md)
 
-Not affiliated with Riot Games, Spotify or Tracker Network. / Riot Games, Spotify veya Tracker Network ile bağlantılı değildir.
+## Data, kept in context
+
+- Live match cards show **identity, agent and rank**. Opponent performance scouting is outside the current feature set.
+- Ranks come from the existing Riot session's match data and MMR responses. Unknown ranks are labelled as unavailable.
+- Personal statistics cover up to **20 accessible Competitive matches**. Missing fields stay unavailable; cached results remain visible if a refresh fails.
+- No external player-statistics account or API key is required.
+- Spotify controls use the Windows desktop media session. Lineup content is served by Tracker.gg.
+
+[Privacy & network details](docs/PRIVACY.md)
+
+## Updates & feedback
+
+Once installed, the app checks for updates and downloads a verified package in the background. Install a ready update while VALORANT is closed, or allow it on the next tracker launch. Existing preferences are preserved.
+
+Found something to improve? [Report a bug](https://github.com/katsudc/katsu-tracker-releases/issues/new?template=bug_report.yml) or [suggest a feature](https://github.com/katsudc/katsu-tracker-releases/issues/new?template=feature_request.yml).
+
+[Release notes](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Brand assets](docs/BRAND_ASSETS.md)
+
+## Project & license
+
+<p align="center"><img src="docs/assets/brand-mark.png" width="80" alt="katsu brand mark"></p>
+
+Created and maintained by **[katsu](https://github.com/katsudc)**. Licensed under the [MIT License](LICENSE).
+
+This repository currently contains public downloads, documentation and issue tracking. Application source code is not published here yet.
+
+Independent community project. Not affiliated with Riot Games, Spotify or Tracker Network. Third-party names and artwork belong to their respective owners.
