@@ -1,8 +1,6 @@
 import { useGameStore } from "../stores/gameStore";
 import { useI18n } from "../lib/i18n";
-import { useUpdateStore } from "../stores/updateStore";
 import { useConstantsStore } from "../stores/constantsStore";
-import { CircleArrowUp } from "lucide-react";
 
 export function Footer() {
   const autoLockAgent = useGameStore((s) => s.autoLockAgent);
@@ -11,9 +9,6 @@ export function Footer() {
   const getAgentForMap = useGameStore((s) => s.getAgentForMap);
   const toggleAutoLock = useGameStore((s) => s.toggleAutoLock);
   const pausedAutoLockAgent = useGameStore((s) => s.pausedAutoLockAgent);
-  const readyVersion = useUpdateStore((s) => s.readyVersion);
-  const isRestarting = useUpdateStore((s) => s.isRestarting);
-  const restartToUpdate = useUpdateStore((s) => s.restartToUpdate);
   const { t } = useI18n();
   const getAgentByUuid = useConstantsStore((s) => s.getAgentByUuid);
 
@@ -66,24 +61,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 shrink-0">
-        {readyVersion && (
-          <button
-            onClick={restartToUpdate}
-            disabled={isRestarting}
-            className="h-8 px-2.5 flex items-center gap-1.5 rounded-lg cursor-pointer bg-accent-gold/10 border border-accent-gold/20 text-accent-gold hover:bg-accent-gold/20 hover:border-accent-gold/40 transition-all shrink-0"
-            title={t("footer.updateReady", { version: readyVersion })}
-          >
-            {isRestarting ? (
-              <div className="w-3.5 h-3.5 border-2 border-accent-gold border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <CircleArrowUp className="w-3.5 h-3.5" />
-            )}
-            <span className="text-[10px] font-bold whitespace-nowrap">v{readyVersion}</span>
-          </button>
-        )}
-        {!readyVersion && <span className="footer-caption">katsu’s Tracker</span>}
-      </div>
+      <span className="footer-caption">katsu’s Tracker</span>
     </footer>
   );
 }

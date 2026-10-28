@@ -1,5 +1,11 @@
 # Release notes
 
+## 1.9.6-personal.38
+
+- Remove the legacy bottom-right update button and its unused translations.
+- Keep the new update notification as the single update entry point, with the same progress, silent installation and automatic restart behavior.
+
+
 ## 1.9.6-personal.37
 
 - Test release for the signed updater introduced in 1.9.6-personal.36.

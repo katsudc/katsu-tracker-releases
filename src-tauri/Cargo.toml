@@ -1,6 +1,6 @@
 [package]
 name = "valorant-tracker"
-version = "1.9.6-personal.37"
+version = "1.9.6-personal.38"
 description = "katsu's Tracker"
 authors = ["katsu"]
 edition = "2021"

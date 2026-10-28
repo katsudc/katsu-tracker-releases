@@ -36,7 +36,7 @@ Copy-Item -LiteralPath $installer.FullName -Destination (Join-Path $OutputDirect
 Copy-Item -LiteralPath $signaturePath -Destination (Join-Path $OutputDirectory 'Katsu-Tracker-setup.exe.sig')
 Copy-Item -LiteralPath 'LICENSE' -Destination (Join-Path $OutputDirectory 'LICENSE.txt')
 $manifest=@{
- version=$version; notes='Updater verification release: test the startup update notification, real download progress, silent background installation and automatic restart from 1.9.6-personal.36. Application features, visual Spike detection and saved preferences are unchanged.'
+ version=$version; notes='Remove the redundant bottom-right update icon. The new update notification remains the single update control; download progress, silent installation and automatic restart are unchanged.'
  pub_date=[DateTime]::UtcNow.ToString('o')
  platforms=@{'windows-x86_64'=@{
   signature=(Get-Content -LiteralPath $signaturePath -Raw).Trim()
