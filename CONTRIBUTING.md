@@ -22,3 +22,5 @@ Documentation is written in English for the public project. The application itse
 Use sample data or redact player identities in screenshots. Never include Riot credentials, tokens, authentication headers, signing keys or private chat messages. Security reports belong in the private process described in [SECURITY.md](SECURITY.md).
 
 Please follow the [community guidelines](CODE_OF_CONDUCT.md).
+
+Before submitting or publishing source, run `powershell -NoProfile -File scripts/check_source_secrets.ps1`. It reports file locations without printing credential values; only the two verified public Translate client constants are allowlisted by exact fingerprint.

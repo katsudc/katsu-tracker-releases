@@ -1,5 +1,6 @@
 param([Parameter(Mandatory=$true)][string]$OutputDirectory)
 $ErrorActionPreference='Stop'
+& (Join-Path $PSScriptRoot 'check_source_secrets.ps1')
 $OutputDirectory=(Resolve-Path -LiteralPath $OutputDirectory).Path
 $manifest=Get-Content -LiteralPath (Join-Path $OutputDirectory 'latest.json') -Raw | ConvertFrom-Json
 $version=$manifest.version
