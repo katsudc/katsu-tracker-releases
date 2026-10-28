@@ -13,3 +13,7 @@ Do not publish a working credential, token or a sensitive vulnerability in a pub
 ## Update integrity
 
 Application updates use updater-signature verification through the project's release channel. Download installers from this repository's [Releases](https://github.com/katsudc/katsu-tracker-releases/releases) page.
+
+## Public client identifiers and private credentials
+
+The two inherited Google Translate client constants have verified public Google-client provenance, documented in [Translation client identifiers](docs/TRANSLATION_IDENTIFIERS.md). Review alerts individually; this exception does not apply to personal Google Cloud/Gemini keys, service accounts, account/session tokens, or updater private signing keys. Never publish those credentials, local credential files or environment files.
