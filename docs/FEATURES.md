@@ -14,7 +14,7 @@ Choose a default agent or a map-specific preference. The existing portrait grid 
 
 ## Visual Spike timer
 
-The timer follows the planted-Spike icon in the game HUD and displays a small, centered countdown on the game monitor. It resets at round end. This system uses visual detection; there is no sound-recording setup.
+The timer follows the planted-Spike icon in the game HUD and displays a compact countdown on the game monitor. A visual editor lets you drag it, change text size and background opacity, and restore defaults; preferences save automatically. Placement follows the physical game viewport and monitor DPI. It resets at round end. This system uses visual detection; there is no sound-recording setup.
 
 Countdown colors reflect estimated time remaining for a full or half defuse, rather than detecting whether someone has started defusing.
 
@@ -36,6 +36,6 @@ The Lineups view uses agent, map and side filters to open Tracker.gg community g
 
 ## Themes, language and updates
 
-Choose Mint, Blue, Violet, Rose or Amber. The interface supports English and Turkish, with preferences saved between launches. Updates are downloaded through the existing GitHub release channel and verified with the updater signature.
+Choose Mint, Blue, Violet, Rose or Amber. The interface supports English and Turkish, with preferences saved between launches. The startup update check is visible. Choose when to download and install a signed release; download progress appears in the app, installation runs silently and the tracker restarts automatically.
 
 [Setup guide](GETTING_STARTED.md) · [Troubleshooting](TROUBLESHOOTING.md) · [Back](../README.md)

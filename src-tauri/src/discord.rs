@@ -1,0 +1,321 @@
+//! Discord Rich Presence integration.
+//!
+//! Mirrors the live game state (map, round score, agent-select, lobby) into the
+//! user's Discord profile via Discord's local IPC socket. The supervisor calls
+//! [`DiscordPresence::update`] whenever the connection or game state changes.
+//!
+//! Asset images (map thumbnails, a default logo) must be uploaded to the Discord
+//! application's "Rich Presence Assets" tab; the asset *keys* referenced here
+//! (e.g. the lowercased map name, or `logo`) must match those uploads.
+
+use crate::api::types::GameState;
+use discord_rich_presence::{activity, DiscordIpc, DiscordIpcClient};
+use parking_lot::Mutex;
+use std::time::{SystemTime, UNIX_EPOCH};
+
+/// Discord application id. Replace with the real id from the Discord Developer
+/// Portal before shipping. Until then the integration silently no-ops (an empty
+/// / invalid id simply fails to connect).
+pub const DISCORD_APP_ID: &str = "1517323235509928077";
+
+/// Default large-image asset key (upload an image with this key to the app).
+const DEFAULT_LARGE_IMAGE: &str = "logo";
+const DEFAULT_LARGE_TEXT: &str = "VALORANT";
+
+/// Thread-safe wrapper around the Discord IPC client. Held in `AppState`.
+pub struct DiscordPresence {
+    inner: Mutex<DiscordState>,
+}
+
+struct DiscordState {
+    client: Option<DiscordIpcClient>,
+    /// Whether the user has the feature enabled (persisted by the frontend).
+    enabled: bool,
+    /// Dedup: the last activity signature we pushed, to avoid spamming IPC.
+    last_signature: String,
+    /// When we last successfully pushed (unix secs). Drives the heartbeat that
+    /// re-pushes an unchanged activity so a silently-dropped IPC socket (which
+    /// happens when the game goes fullscreen) self-heals instead of vanishing.
+    last_push_secs: i64,
+    /// Session start (unix secs). Sent on every push so a status change
+    /// (menu → match → menu) does not restart Discord's elapsed clock.
+    session_start: Option<i64>,
+}
+
+/// Re-push the activity at least this often even if nothing changed, so a
+/// dead-but-not-reported IPC connection gets noticed and re-established.
+const HEARTBEAT_SECS: i64 = 15;
+
+impl DiscordPresence {
+    pub fn new() -> Self {
+        Self {
+            inner: Mutex::new(DiscordState {
+                client: None,
+                enabled: false,
+                last_signature: String::new(),
+                last_push_secs: 0,
+                session_start: None,
+            }),
+        }
+    }
+
+    /// Enable/disable the integration. Disabling clears any shown activity and
+    /// drops the connection.
+    pub fn set_enabled(&self, enabled: bool) {
+        let mut st = self.inner.lock();
+        if st.enabled == enabled {
+            return;
+        }
+        st.enabled = enabled;
+        if !enabled {
+            if let Some(client) = st.client.as_mut() {
+                let _ = client.clear_activity();
+                let _ = client.close();
+            }
+            st.client = None;
+            st.last_signature.clear();
+            st.session_start = None;
+        }
+    }
+
+    pub fn is_enabled(&self) -> bool {
+        self.inner.lock().enabled
+    }
+
+    /// Ensure we have a live IPC connection. Returns false if Discord is not
+    /// running / the app id is unset.
+    fn ensure_connected(st: &mut DiscordState) -> bool {
+        if DISCORD_APP_ID.is_empty() {
+            return false;
+        }
+        if st.client.is_some() {
+            return true;
+        }
+        let mut client = DiscordIpcClient::new(DISCORD_APP_ID);
+        match client.connect() {
+            Ok(_) => {
+                st.client = Some(client);
+                true
+            }
+            Err(_) => false,
+        }
+    }
+
+    /// Push the current state to Discord. `conn_status` is the supervisor's
+    /// connection status string ("connected" | "connecting" | "waiting_for_game"
+    /// | "paused"). No-op when disabled.
+    pub fn update(&self, gs: &GameState, conn_status: &str) {
+        let mut st = self.inner.lock();
+        if !st.enabled {
+            return;
+        }
+
+        // Build details/state/image for the current state.
+        let (details, state_line, image_key) = render(gs, conn_status);
+
+        // One clock for the whole RPC session. Omitting the timestamp, or
+        // minting a new one when the map/score text changes, makes Discord
+        // restart elapsed at 0.
+        if st.session_start.is_none() {
+            st.session_start = Some(now_secs());
+        }
+
+        // Dedup identical payloads (timer changes are continuous so we exclude it
+        // from the signature - Discord keeps counting from the start timestamp).
+        // BUT still re-push every HEARTBEAT_SECS even when unchanged: the IPC
+        // socket can die silently when the game grabs the screen, and without a
+        // periodic re-push the presence would just vanish until the next state
+        // change. The heartbeat makes it self-heal.
+        let now = now_secs();
+        let signature = format!("{details}|{state_line}|{image_key}");
+        let unchanged = signature == st.last_signature;
+        if unchanged && now - st.last_push_secs < HEARTBEAT_SECS {
+            return;
+        }
+
+        let session_start = st.session_start;
+
+        // Try to push; if the socket is dead, reconnect once and retry in the
+        // same tick so a drop costs zero visible downtime.
+        let mut pushed = false;
+        for attempt in 0..2 {
+            if !Self::ensure_connected(&mut st) {
+                break; // Discord not running / app id unset.
+            }
+            let res = {
+                let client = st.client.as_mut().unwrap();
+                client.set_activity(Self::build_activity(
+                    &details,
+                    &state_line,
+                    &image_key,
+                    session_start,
+                ))
+            };
+            match res {
+                Ok(_) => {
+                    // Write succeeding is not enough: Discord answers every
+                    // SET_ACTIVITY and also PINGs. The crate never reads those
+                    // frames, so the pipe fills in ~10-15 min, Discord drops
+                    // the socket, and the new session shows elapsed 0.
+                    let alive = Self::drain_one(&mut st.client);
+                    if alive {
+                        pushed = true;
+                        break;
+                    }
+                    Self::drop_client(&mut st);
+                    if attempt == 1 {
+                        st.last_signature.clear();
+                    }
+                }
+                Err(_) => {
+                    Self::drop_client(&mut st);
+                    if attempt == 1 {
+                        // Both tries failed; reconnect on a later tick.
+                        st.last_signature.clear();
+                    }
+                }
+            }
+        }
+
+        if pushed {
+            st.last_signature = signature;
+            st.last_push_secs = now;
+        }
+    }
+
+    /// Build the activity payload. Discord rejects empty state/details
+    /// (must be >= 2 chars), so those are only attached when non-empty.
+    fn build_activity<'a>(
+        details: &'a str,
+        state_line: &'a str,
+        image_key: &'a str,
+        session_start: Option<i64>,
+    ) -> activity::Activity<'a> {
+        // Hover text is always "VALORANT" (the map name already shows in
+        // `details`); the small logo brands the presence.
+        let assets = activity::Assets::new()
+            .large_image(image_key)
+            .large_text(DEFAULT_LARGE_TEXT)
+            .small_image(DEFAULT_LARGE_IMAGE)
+            .small_text(DEFAULT_LARGE_TEXT);
+
+        let mut act = activity::Activity::new().assets(assets);
+        if !details.is_empty() {
+            act = act.details(details);
+        }
+        if !state_line.is_empty() {
+            act = act.state(state_line);
+        }
+        if let Some(start) = session_start {
+            act = act.timestamps(activity::Timestamps::new().start(start));
+        }
+        act
+    }
+
+    fn drop_client(st: &mut DiscordState) {
+        if let Some(client) = st.client.as_mut() {
+            let _ = client.close();
+        }
+        st.client = None;
+    }
+
+    /// Read the frame Discord just queued. Opcode 3 is a PING; answer with
+    /// PONG (4) or Discord closes the pipe. Returns false if the socket died.
+    ///
+    /// `recv` blocks, so the read runs on a short-lived thread. A missing
+    /// reply must not stall the supervisor.
+    fn drain_one(slot: &mut Option<DiscordIpcClient>) -> bool {
+        let Some(mut owned) = slot.take() else {
+            return false;
+        };
+        let (tx, rx) = std::sync::mpsc::channel();
+        std::thread::spawn(move || {
+            let ok = match owned.recv() {
+                Ok((3, payload)) => owned.send(payload, 4).is_ok(),
+                Ok(_) => true,
+                Err(_) => false,
+            };
+            let _ = tx.send((owned, ok));
+        });
+        match rx.recv_timeout(std::time::Duration::from_millis(400)) {
+            Ok((owned, ok)) => {
+                *slot = Some(owned);
+                ok
+            }
+            Err(_) => false,
+        }
+    }
+}
+
+impl Default for DiscordPresence {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+fn now_secs() -> i64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_secs() as i64)
+        .unwrap_or(0)
+}
+
+/// Map a GameState + connection status to Discord activity fields.
+/// Returns (details, state, large_image_key).
+fn render(gs: &GameState, conn_status: &str) -> (String, String, String) {
+    // Connection problems take precedence over a stale game state.
+    if conn_status == "paused" {
+        return (
+            "İzleme duraklatıldı".into(),
+            String::new(),
+            DEFAULT_LARGE_IMAGE.into(),
+        );
+    }
+    if conn_status == "waiting_for_game" || conn_status == "connecting" {
+        return (
+            "Oyun bekleniyor".into(),
+            String::new(),
+            DEFAULT_LARGE_IMAGE.into(),
+        );
+    }
+
+    match gs.state.as_str() {
+        "ingame" => {
+            // Incomplete/stale payload (e.g. empty debounce fallback): don't claim
+            // "Maçta" with a blank map or a fake 0-0 — fall back to lobby text.
+            let map = gs.map_name.clone().filter(|m| !m.is_empty());
+            let Some(map) = map else {
+                return ("Menüde".into(), String::new(), DEFAULT_LARGE_IMAGE.into());
+            };
+            let details = match (gs.ally_score, gs.enemy_score) {
+                (Some(a), Some(e)) => format!("{map}  {a} - {e}"),
+                _ => map.clone(),
+            };
+            (details, "Maçta".into(), map_image_key(&map))
+        }
+        "pregame" => {
+            let map = gs.map_name.clone().unwrap_or_else(|| "Bilinmeyen".into());
+            let image = map_image_key(&map);
+            ("Ajan seçimi".into(), map, image)
+        }
+        // idle / disconnected / unknown → lobby presence (not a live match)
+        _ => ("Menüde".into(), String::new(), DEFAULT_LARGE_IMAGE.into()),
+    }
+}
+
+/// Discord asset key for a map: lowercase, no spaces (e.g. "Ascent" -> "ascent").
+/// Falls back to the default logo asset for unknown maps so the image never
+/// renders broken.
+fn map_image_key(map_name: &str) -> String {
+    let key = map_name.to_lowercase().replace(' ', "");
+    if key.is_empty()
+        || key == "bilinmeyen"
+        || key == "poligon"
+        || key == "therange"
+        || key == "range"
+    {
+        DEFAULT_LARGE_IMAGE.to_string()
+    } else {
+        key
+    }
+}

@@ -1,0 +1,547 @@
+use once_cell::sync::Lazy;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct AgentData {
+    pub uuid: String,
+    pub name: String,
+    pub color: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct AppConstants {
+    pub agents: Vec<AgentData>,
+}
+
+pub static APP_CONSTANTS: Lazy<AppConstants> = Lazy::new(|| {
+    let mut agents = Vec::new();
+    agents.push(AgentData {
+        uuid: "add6443a-41bd-e414-f6ad-e58d267f4e95".into(),
+        name: "jett".into(),
+        color: "#7de8e0".into(),
+    });
+    agents.push(AgentData {
+        uuid: "a3bfb853-43b2-7238-a4f1-ad90e9e46bcc".into(),
+        name: "reyna".into(),
+        color: "#bd3fff".into(),
+    });
+    agents.push(AgentData {
+        uuid: "f94c3b30-42be-e959-889c-5aa313dba261".into(),
+        name: "raze".into(),
+        color: "#ecb22e".into(),
+    });
+    agents.push(AgentData {
+        uuid: "eb93336a-449b-9c1b-0a54-a891f7921d69".into(),
+        name: "phoenix".into(),
+        color: "#ff9f43".into(),
+    });
+    agents.push(AgentData {
+        uuid: "5f8d3a7f-467b-97f3-062c-13acf203c006".into(),
+        name: "breach".into(),
+        color: "#ff6b35".into(),
+    });
+    agents.push(AgentData {
+        uuid: "320b2a48-4d9b-a075-30f1-1f93a9b638fa".into(),
+        name: "sova".into(),
+        color: "#4a90d9".into(),
+    });
+    agents.push(AgentData {
+        uuid: "569fdd95-4d10-43ab-ca70-79becc718b46".into(),
+        name: "sage".into(),
+        color: "#57e2b4".into(),
+    });
+    agents.push(AgentData {
+        uuid: "117ed9e3-49f3-6512-3ccf-0cada7e3823b".into(),
+        name: "cypher".into(),
+        color: "#ece8e1".into(),
+    });
+    agents.push(AgentData {
+        uuid: "9f0d8ba9-4140-b941-57d3-a7ad57c6b417".into(),
+        name: "brimstone".into(),
+        color: "#ff4655".into(),
+    });
+    agents.push(AgentData {
+        uuid: "1e58de9c-4950-5125-93e9-a0aee9f98746".into(),
+        name: "killjoy".into(),
+        color: "#f0d634".into(),
+    });
+    agents.push(AgentData {
+        uuid: "707eab51-4836-f488-046a-cda6bf494859".into(),
+        name: "viper".into(),
+        color: "#1db954".into(),
+    });
+    agents.push(AgentData {
+        uuid: "8e253930-4c05-31dd-1b6c-968525494517".into(),
+        name: "omen".into(),
+        color: "#7b42c9".into(),
+    });
+    agents.push(AgentData {
+        uuid: "6f2a04ca-43e0-be17-7f36-b3908627744d".into(),
+        name: "skye".into(),
+        color: "#6bc26b".into(),
+    });
+    agents.push(AgentData {
+        uuid: "7f94d92c-4234-0a36-9646-3a87eb8b5c89".into(),
+        name: "yoru".into(),
+        color: "#344afb".into(),
+    });
+    agents.push(AgentData {
+        uuid: "41fb69c1-4189-7b37-f117-bcaf1e96f1bf".into(),
+        name: "astra".into(),
+        color: "#9b5fe0".into(),
+    });
+    agents.push(AgentData {
+        uuid: "601dbbe7-43ce-be57-2a40-4abd24953621".into(),
+        name: "kayo".into(),
+        color: "#5da4e5".into(),
+    });
+    agents.push(AgentData {
+        uuid: "22697a3d-45bf-8dd7-4fec-84a9e28c69d7".into(),
+        name: "chamber".into(),
+        color: "#d4a843".into(),
+    });
+    agents.push(AgentData {
+        uuid: "bb2a4828-46eb-8cd1-e765-15848195d751".into(),
+        name: "neon".into(),
+        color: "#00bfff".into(),
+    });
+    agents.push(AgentData {
+        uuid: "dade69b4-4f5a-8528-247b-219e5a1facd6".into(),
+        name: "fade".into(),
+        color: "#3e4772".into(),
+    });
+    agents.push(AgentData {
+        uuid: "95b78ed7-4637-86d9-7e41-71ba8c293152".into(),
+        name: "harbor".into(),
+        color: "#36a8b5".into(),
+    });
+    agents.push(AgentData {
+        uuid: "e370fa57-4757-3604-3648-499e1f642d3f".into(),
+        name: "gekko".into(),
+        color: "#a3e635".into(),
+    });
+    agents.push(AgentData {
+        uuid: "cc8b64c8-4b25-4ff9-6e7f-37b4da43d235".into(),
+        name: "deadlock".into(),
+        color: "#768079".into(),
+    });
+    agents.push(AgentData {
+        uuid: "0e38b510-41a8-5780-5e8f-568b2a4f2d6c".into(),
+        name: "iso".into(),
+        color: "#c77dff".into(),
+    });
+    agents.push(AgentData {
+        uuid: "1dbf2edd-4729-0984-3115-daa5eed44993".into(),
+        name: "clove".into(),
+        color: "#e07be0".into(),
+    });
+    agents.push(AgentData {
+        uuid: "efba5359-4016-a1e5-7626-b1ae76895940".into(),
+        name: "vyse".into(),
+        color: "#c94050".into(),
+    });
+    agents.push(AgentData {
+        uuid: "b444168c-4e35-8076-db47-ef9bf368f384".into(),
+        name: "tejo".into(),
+        color: "#c49a3c".into(),
+    });
+    agents.push(AgentData {
+        uuid: "92eeef5d-43b5-1d4a-8d03-b3927a09034b".into(),
+        name: "veto".into(),
+        color: "#2d8a6e".into(),
+    });
+    agents.push(AgentData {
+        uuid: "df1cb487-4902-002e-5c17-d28e83e78588".into(),
+        name: "waylay".into(),
+        color: "#e85da0".into(),
+    });
+    agents.push(AgentData {
+        uuid: "7c8a4701-4de6-9355-b254-e09bc2a34b72".into(),
+        name: "miks".into(),
+        color: "#462b75".into(),
+    });
+
+    AppConstants { agents }
+});
+
+pub static AGENTS: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
+    let mut m = HashMap::new();
+    m.insert("jett", "add6443a-41bd-e414-f6ad-e58d267f4e95");
+    m.insert("reyna", "a3bfb853-43b2-7238-a4f1-ad90e9e46bcc");
+    m.insert("raze", "f94c3b30-42be-e959-889c-5aa313dba261");
+    m.insert("phoenix", "eb93336a-449b-9c1b-0a54-a891f7921d69");
+    m.insert("breach", "5f8d3a7f-467b-97f3-062c-13acf203c006");
+    m.insert("sova", "320b2a48-4d9b-a075-30f1-1f93a9b638fa");
+    m.insert("sage", "569fdd95-4d10-43ab-ca70-79becc718b46");
+    m.insert("cypher", "117ed9e3-49f3-6512-3ccf-0cada7e3823b");
+    m.insert("brimstone", "9f0d8ba9-4140-b941-57d3-a7ad57c6b417");
+    m.insert("killjoy", "1e58de9c-4950-5125-93e9-a0aee9f98746");
+    m.insert("viper", "707eab51-4836-f488-046a-cda6bf494859");
+    m.insert("omen", "8e253930-4c05-31dd-1b6c-968525494517");
+    m.insert("skye", "6f2a04ca-43e0-be17-7f36-b3908627744d");
+    m.insert("yoru", "7f94d92c-4234-0a36-9646-3a87eb8b5c89");
+    m.insert("astra", "41fb69c1-4189-7b37-f117-bcaf1e96f1bf");
+    m.insert("kayo", "601dbbe7-43ce-be57-2a40-4abd24953621");
+    m.insert("chamber", "22697a3d-45bf-8dd7-4fec-84a9e28c69d7");
+    m.insert("neon", "bb2a4828-46eb-8cd1-e765-15848195d751");
+    m.insert("fade", "dade69b4-4f5a-8528-247b-219e5a1facd6");
+    m.insert("harbor", "95b78ed7-4637-86d9-7e41-71ba8c293152");
+    m.insert("gekko", "e370fa57-4757-3604-3648-499e1f642d3f");
+    m.insert("deadlock", "cc8b64c8-4b25-4ff9-6e7f-37b4da43d235");
+    m.insert("iso", "0e38b510-41a8-5780-5e8f-568b2a4f2d6c");
+    m.insert("clove", "1dbf2edd-4729-0984-3115-daa5eed44993");
+    m.insert("vyse", "efba5359-4016-a1e5-7626-b1ae76895940");
+    m.insert("tejo", "b444168c-4e35-8076-db47-ef9bf368f384");
+    m.insert("veto", "92eeef5d-43b5-1d4a-8d03-b3927a09034b");
+    m.insert("waylay", "df1cb487-4902-002e-5c17-d28e83e78588");
+    m.insert("miks", "7c8a4701-4de6-9355-b254-e09bc2a34b72");
+    m
+});
+
+pub static MAP_NAMES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
+    let mut m = HashMap::new();
+    m.insert("/Game/Maps/Ascent/Ascent", "Ascent");
+    m.insert("/Game/Maps/Bonsai/Bonsai", "Split");
+    m.insert("/Game/Maps/Canyon/Canyon", "Fracture");
+    m.insert("/Game/Maps/Duality/Duality", "Bind");
+    m.insert("/Game/Maps/Foxtrot/Foxtrot", "Breeze");
+    m.insert("/Game/Maps/HURM/HURM_Alley/HURM_Alley", "District");
+    m.insert("/Game/Maps/HURM/HURM_Bowl/HURM_Bowl", "Kasbah");
+    m.insert("/Game/Maps/HURM/HURM_Helix/HURM_Helix", "Drift");
+    m.insert("/Game/Maps/HURM/HURM_HighTide/HURM_HighTide", "Glitch");
+    m.insert("/Game/Maps/HURM/HURM_Yard/HURM_Yard", "Piazza");
+    m.insert("/Game/Maps/Duel/Duel_1/Skirmish_A", "Skirmish A");
+    m.insert("/Game/Maps/Duel/Duel_2/Skirmish_B", "Skirmish B");
+    m.insert("/Game/Maps/Duel/Duel_3/Skirmish_C", "Skirmish C");
+    m.insert("/Game/Maps/Duel/Duel_Platform/Skirmish_D", "Skirmish D");
+    m.insert("/Game/Maps/Duel/Duel_Heady/Skirmish_E", "Skirmish E");
+    m.insert("/Game/Maps/NPEV2/NPEV2", "Basic Training");
+    m.insert("/Game/Maps/Jam/Jam", "Lotus");
+    m.insert("/Game/Maps/Juliett/Juliett", "Sunset");
+    m.insert("/Game/Maps/Pitt/Pitt", "Pearl");
+    m.insert("/Game/Maps/Port/Port", "Icebox");
+    m.insert("/Game/Maps/Poveglia/Range", "The Range");
+    m.insert("/Game/Maps/Poveglia/Poveglia", "The Range");
+    m.insert("/Game/Maps/PovegliaV2/RangeV2", "The Range");
+    m.insert("/Game/Maps/PovegliaV2/PovegliaV2", "The Range");
+    m.insert("/Game/Maps/Range/Range", "The Range");
+    m.insert("/Game/Maps/Triad/Triad", "Haven");
+    m.insert("/Game/Maps/Infinity/Infinity", "Abyss");
+    m.insert("/Game/Maps/Rook/Rook", "Corrode");
+    m.insert("/Game/Maps/Plummet/Plummet", "Summit");
+    m
+});
+
+/// Labels shown in the overlay. Panel telemetry uses `queue_label` instead.
+pub static QUEUE_NAMES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
+    let mut m = HashMap::new();
+    m.insert("competitive", "Rekabetçi");
+    m.insert("unrated", "Normal");
+    m.insert("spikerush", "Spike Rush");
+    m.insert("deathmatch", "Deathmatch");
+    m.insert("ggteam", "Escalation");
+    m.insert("newmap", "Yeni Harita");
+    m.insert("onefa", "Replication");
+    m.insert("swiftplay", "Swiftplay");
+    m.insert("hurm", "Team Deathmatch");
+    m.insert("premier", "Premier");
+    m.insert("custom", "Özel Oyun");
+    m
+});
+
+fn normalize_queue_key(queue_id: &str) -> String {
+    queue_id
+        .trim()
+        .trim_matches('/')
+        .rsplit(['/', '\\'])
+        .next()
+        .unwrap_or("")
+        .chars()
+        .filter(|c| c.is_ascii_alphanumeric())
+        .flat_map(|c| c.to_lowercase())
+        .collect()
+}
+
+fn queue_alias(key: &str) -> Option<&'static str> {
+    Some(match key {
+        "ranked" => "competitive",
+        "escalation" => "ggteam",
+        "replication" => "onefa",
+        "teamdeathmatch" | "tdm" => "hurm",
+        "customgame" => "custom",
+        "snowballfight" => "snowball",
+        "premierteam" | "tournamentmode" => "premier",
+        "skirmish" => "newmap",
+        _ => return None,
+    })
+}
+
+fn panel_queue_label(key: &str) -> Option<&'static str> {
+    Some(match key {
+        "competitive" | "ranked" => "Rekabetçi",
+        "unrated" => "Derecesiz",
+        "spikerush" => "Spike Hücumu",
+        "deathmatch" => "Ölüm Kalım",
+        "ggteam" | "escalation" => "Tırmanış",
+        "onefa" | "replication" => "Replikasyon",
+        "swiftplay" => "Tam Gaz",
+        "hurm" | "teamdeathmatch" | "tdm" => "Takım Ölüm Kalım",
+        "premier" | "premierteam" | "tournamentmode" => "Premier",
+        "custom" | "customgame" => "Özel Oyun",
+        "newmap" | "skirmish" => "Yeni Harita",
+        "snowball" | "snowballfight" => "Kartopu Savaşı",
+        _ => return None,
+    })
+}
+
+/// Turkish panel label for a Riot queue id. Unknown non-empty ids are returned
+/// as-is so a new mode still shows up instead of a blank cell.
+pub fn queue_label(queue_id: &str) -> Option<String> {
+    let key = normalize_queue_key(queue_id);
+    if key.is_empty() {
+        return None;
+    }
+    if let Some(name) = panel_queue_label(&key) {
+        return Some(name.to_string());
+    }
+    if let Some(alias) = queue_alias(&key) {
+        if let Some(name) = panel_queue_label(alias) {
+            return Some(name.to_string());
+        }
+    }
+    Some(queue_id.trim().to_string())
+}
+
+/// ModeID distinguishes deathmatch / swiftplay / spike rush, but not
+/// competitive vs unrated (both are Bomb). Returns None for ambiguous modes.
+pub fn mode_label_from_mode_id(mode_id: &str) -> Option<&'static str> {
+    let id = mode_id.to_ascii_lowercase();
+    if id.contains("swiftplay") {
+        return Some("Tam Gaz");
+    }
+    if id.contains("quickbomb") || id.contains("spikerush") {
+        return Some("Spike Hücumu");
+    }
+    if id.contains("hurm") {
+        return Some("Takım Ölüm Kalım");
+    }
+    if id.contains("deathmatch") {
+        return Some("Ölüm Kalım");
+    }
+    if id.contains("gungame") || id.contains("escalation") {
+        return Some("Tırmanış");
+    }
+    if id.contains("oneforall") || id.contains("replication") {
+        return Some("Replikasyon");
+    }
+    if id.contains("snowball") {
+        return Some("Kartopu Savaşı");
+    }
+    if id.contains("range") || id.contains("poveglia") {
+        return Some("Poligon");
+    }
+    if id.contains("skirmish") || id.contains("/duel") {
+        return Some("Çatışma");
+    }
+    None
+}
+
+/// Pick the best display name for the match the player is in.
+///
+/// `carried` is the label we already resolved earlier in the same match
+/// (agent select → loading often drops the queue id).
+pub fn resolve_match_mode(
+    queue_id: Option<&str>,
+    mode_id: Option<&str>,
+    provisioning: Option<&str>,
+    carried: Option<&str>,
+) -> Option<String> {
+    if let Some(queue_id) = queue_id.map(str::trim).filter(|s| !s.is_empty()) {
+        if let Some(label) = queue_label(queue_id) {
+            return Some(label);
+        }
+    }
+    let custom = provisioning
+        .map(str::trim)
+        .is_some_and(|p| p.eq_ignore_ascii_case("CustomGame") || p.eq_ignore_ascii_case("Custom"));
+    if custom {
+        return Some("Özel Oyun".into());
+    }
+    if let Some(mode_id) = mode_id.map(str::trim).filter(|s| !s.is_empty()) {
+        if let Some(label) = mode_label_from_mode_id(mode_id) {
+            return Some(label.to_string());
+        }
+    }
+    carried
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .map(|s| s.to_string())
+}
+
+/// Display name for a Riot map path. Unknown maps keep the last path segment
+/// instead of collapsing to "Unknown".
+pub fn map_label(map_id: &str) -> String {
+    let trimmed = map_id.trim();
+    if trimmed.is_empty() {
+        return "Unknown".into();
+    }
+    if let Some(name) = MAP_NAMES.get(trimmed) {
+        return (*name).to_string();
+    }
+    let seg = trimmed
+        .rsplit(['/', '\\'])
+        .find(|s| !s.is_empty())
+        .unwrap_or("Unknown");
+    if seg.eq_ignore_ascii_case("unknown") {
+        "Unknown".into()
+    } else {
+        seg.to_string()
+    }
+}
+
+#[cfg(test)]
+mod queue_tests {
+    use super::*;
+
+    #[test]
+    fn swiftplay_is_tam_gaz() {
+        assert_eq!(queue_label("swiftplay").as_deref(), Some("Tam Gaz"));
+        assert_eq!(queue_label("Swiftplay").as_deref(), Some("Tam Gaz"));
+        assert_eq!(
+            queue_label("/Game/Queues/Swiftplay").as_deref(),
+            Some("Tam Gaz")
+        );
+    }
+
+    #[test]
+    fn known_queues_use_turkish_names() {
+        assert_eq!(queue_label("competitive").as_deref(), Some("Rekabetçi"));
+        assert_eq!(queue_label("unrated").as_deref(), Some("Derecesiz"));
+        assert_eq!(queue_label("hurm").as_deref(), Some("Takım Ölüm Kalım"));
+        assert_eq!(queue_label("ggteam").as_deref(), Some("Tırmanış"));
+        assert_eq!(queue_label("customgame").as_deref(), Some("Özel Oyun"));
+        assert_eq!(queue_label("snowball").as_deref(), Some("Kartopu Savaşı"));
+    }
+
+    #[test]
+    fn unknown_queue_is_not_blank() {
+        assert_eq!(queue_label("  ").as_deref(), None);
+        assert_eq!(queue_label("futuremode").as_deref(), Some("futuremode"));
+    }
+
+    #[test]
+    fn bomb_mode_does_not_guess_competitive() {
+        assert_eq!(
+            mode_label_from_mode_id("/Game/GameModes/Bomb/BombGameMode_C"),
+            None
+        );
+        assert_eq!(
+            mode_label_from_mode_id("/Game/GameModes/Swiftplay/SwiftplayGameMode_C"),
+            Some("Tam Gaz")
+        );
+        assert_eq!(
+            mode_label_from_mode_id("/Game/GameModes/Deathmatch/DeathmatchGameMode_C"),
+            Some("Ölüm Kalım")
+        );
+    }
+
+    #[test]
+    fn resolve_prefers_queue_then_mode_then_carry() {
+        assert_eq!(
+            resolve_match_mode(Some("swiftplay"), Some("/Game/GameModes/Bomb/BombGameMode_C"), None, Some("Derecesiz"))
+                .as_deref(),
+            Some("Tam Gaz")
+        );
+        assert_eq!(
+            resolve_match_mode(None, Some("/Game/GameModes/HURM/HURMGameMode_C"), None, None)
+                .as_deref(),
+            Some("Takım Ölüm Kalım")
+        );
+        assert_eq!(
+            resolve_match_mode(None, Some("/Game/GameModes/Bomb/BombGameMode_C"), Some("CustomGame"), None)
+                .as_deref(),
+            Some("Özel Oyun")
+        );
+        assert_eq!(
+            resolve_match_mode(None, Some("/Game/GameModes/Bomb/BombGameMode_C"), None, Some("Rekabetçi"))
+                .as_deref(),
+            Some("Rekabetçi")
+        );
+        assert_eq!(
+            resolve_match_mode(None, Some("/Game/GameModes/Bomb/BombGameMode_C"), None, None),
+            None
+        );
+    }
+
+    #[test]
+    fn overlay_queue_names_are_valid_turkish() {
+        // These used to be mojibake ("RekabetÃ§i") and reached the overlay,
+        // Discord and the admin panel.
+        assert_eq!(QUEUE_NAMES.get("competitive"), Some(&"Rekabetçi"));
+        assert_eq!(QUEUE_NAMES.get("custom"), Some(&"Özel Oyun"));
+        assert!(QUEUE_NAMES.values().all(|v| !v.contains('Ã')));
+    }
+
+    #[test]
+    fn unknown_map_keeps_path_segment() {
+        assert_eq!(map_label("/Game/Maps/Jam/Jam"), "Lotus");
+        assert_eq!(map_label("/Game/Maps/NewMap/Cascade"), "Cascade");
+        assert_eq!(map_label(""), "Unknown");
+    }
+}
+
+/// Seasons before Ascendant rank was added (Episode 4 Act 3 and earlier)
+/// These seasons need +3 tier offset for ranks above Diamond (tier > 20)
+pub static BEFORE_ASCENDANT_SEASONS: &[&str] = &[
+    // Episode 1
+    "0df5adb9-4dcb-6899-1306-3e9860661dd3", // E1A1
+    "3f61c772-4560-cd3f-5d3f-a7ab5abda6b3", // E1A2
+    "0530b9c4-4980-f2ee-df5d-09864cd00542", // E1A3
+    // Episode 2
+    "46ea6166-4573-1128-9cea-60a15640059b", // E2A1
+    "fcf2c8f4-4324-e50b-2e23-718e4a3ab046", // E2A2
+    "97b6e739-44cc-ffa7-49ad-398ba502ceb0", // E2A3
+    // Episode 3
+    "ab57ef51-4e59-da91-cc7d-51a5a2b9b8ff", // E3A1
+    "52e9749a-429b-7060-99fe-4595426a0cf7", // E3A2
+    "71c81c67-4fae-ceb1-844c-aab2bb8710fa", // E3A3
+    // Episode 4
+    "2a27e5d2-4d30-c9e2-b15a-93b8909a442c", // E4A1
+    "4cb622e1-4244-6f41-a05f-2c7b300ee8fc", // E4A2
+    "a16955a5-4ad0-f761-5e9e-389df1c892fb", // E4A3 (last season before Ascendant)
+];
+
+/// Rank tier to name mapping
+pub static RANK_NAMES: Lazy<HashMap<u32, (&'static str, &'static str)>> = Lazy::new(|| {
+    let mut m = HashMap::new();
+    m.insert(0, ("Unranked", "#768079"));
+    m.insert(1, ("Unranked", "#768079"));
+    m.insert(2, ("Unranked", "#768079"));
+    m.insert(3, ("Iron 1", "#4f4f4f"));
+    m.insert(4, ("Iron 2", "#4f4f4f"));
+    m.insert(5, ("Iron 3", "#4f4f4f"));
+    m.insert(6, ("Bronze 1", "#a5855d"));
+    m.insert(7, ("Bronze 2", "#a5855d"));
+    m.insert(8, ("Bronze 3", "#a5855d"));
+    m.insert(9, ("Silver 1", "#b4b4b4"));
+    m.insert(10, ("Silver 2", "#b4b4b4"));
+    m.insert(11, ("Silver 3", "#b4b4b4"));
+    m.insert(12, ("Gold 1", "#dbb726"));
+    m.insert(13, ("Gold 2", "#dbb726"));
+    m.insert(14, ("Gold 3", "#dbb726"));
+    m.insert(15, ("Platinum 1", "#339999"));
+    m.insert(16, ("Platinum 2", "#339999"));
+    m.insert(17, ("Platinum 3", "#339999"));
+    m.insert(18, ("Diamond 1", "#b388ff"));
+    m.insert(19, ("Diamond 2", "#b388ff"));
+    m.insert(20, ("Diamond 3", "#b388ff"));
+    m.insert(21, ("Ascendant 1", "#2e8b57"));
+    m.insert(22, ("Ascendant 2", "#2e8b57"));
+    m.insert(23, ("Ascendant 3", "#2e8b57"));
+    m.insert(24, ("Immortal 1", "#ff5551"));
+    m.insert(25, ("Immortal 2", "#ff5551"));
+    m.insert(26, ("Immortal 3", "#ff5551"));
+    m.insert(27, ("Radiant", "#ffffaa"));
+    m
+});

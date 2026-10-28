@@ -2,3 +2,8 @@
 *.yml text eol=lf
 LICENSE text eol=lf
 *.png binary
+
+# Keep GitHub's language chart focused on maintained application code.
+src-tauri/vendor/** linguist-vendored
+src-tauri/tests/fixtures/** linguist-generated
+docs/assets/** linguist-documentation

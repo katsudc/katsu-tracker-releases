@@ -26,13 +26,15 @@ No external statistics API key or separate tracker account is required.
 | Lock delay | Set the delay in the agent settings; keep the auto-lock switch off when you do not want it to run. |
 | Theme & language | Open the settings tab to choose an accent and English or Turkish. |
 | Window position | Use the movable window mode and place the main window where it suits your setup. |
-| Spike timer | Enable the single **Spike timer** switch in settings. |
+| Spike timer | Enable **Spike timer** and use **Edit overlay** to position or restyle the countdown. |
 
 Preferences are saved automatically.
 
 ## Spike timer
 
-Choose **Borderless Windowed / Windowed Fullscreen** in VALORANT. The detector watches the planted-Spike HUD icon near the top of the game view; keep that HUD visible. The countdown appears on the game monitor and resets at round end.
+The countdown follows the game viewport and monitor, including mixed-DPI and non-native resolutions. **Borderless Windowed / Windowed Fullscreen** is the most reliable display mode; true exclusive fullscreen can hide external windows. The detector watches the planted-Spike HUD icon near the top of the game view; keep that HUD visible. The countdown appears on the game monitor and resets at round end.
+
+Open **Options → Spike timer → Edit overlay** to drag the seconds to a new position. Use the corner handle or **Text size** slider to resize, and **Background opacity** for contrast. Arrow keys move the focused timer; Shift + arrow moves farther. Changes save automatically. **Reset position & style** restores the default.
 
 The countdown is a timing estimate. Its colors indicate whether the remaining time allows a full defuse, only a half defuse, or neither; it does not observe actual defuse progress. Detection is visual and does not require audio calibration.
 
@@ -46,6 +48,6 @@ Open **Lineups**, select an agent, map and side, then press **Show lineups**. Gu
 
 ## Updating
 
-Updates download in the background and are checked using the updater signature. When the update is ready, close VALORANT and use the update notification, or let the tracker install it the next time it opens. Keep the existing installation to retain your preferences.
+The tracker visibly checks for updates at startup. When one is available, close VALORANT and choose **Update now**. Follow the real download progress, signature verification, silent installation and automatic restart in the app. No setup wizard is opened. Existing preferences are retained. Older clients use their previous update flow once to install 1.9.6-personal.36.
 
 [Need help?](TROUBLESHOOTING.md) · [Back to the project](../README.md)

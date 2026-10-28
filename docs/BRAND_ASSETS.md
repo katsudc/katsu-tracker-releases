@@ -41,3 +41,7 @@ Primary request: Create a perfectly centered original sculptural uppercase lette
 ```
 
 </details>
+
+## Overlay editor reference
+
+`src/assets/spike-editor-hud.png` is the user-provided static gameplay/HUD reference used by the layout editor. CSS reduces its opacity while leaving the draggable timer clear. It is not AI-generated; game artwork belongs to Riot Games.

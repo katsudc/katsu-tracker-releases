@@ -1,0 +1,13 @@
+{
+  "source_url": "https://www.youtube.com/watch?v=RRdK1cVjZzk",
+  "author": "Łukena",
+  "title": "Valorant Spike Activated and Planted Sound Effect (Clean and Free Sound Effect for edit)",
+  "source_duration_seconds": 5.108375,
+  "segment_start_seconds": 3.94,
+  "segment_duration_seconds": 1.044,
+  "format": "48000 Hz mono signed PCM16 little endian",
+  "sha256": "4d21bb6d107368986a73ad0633d8d4fa2da6d5f671593b4c04bb74a5adb738a5",
+  "timing_note": "End-of-plant sound region; onset estimate is not verified against live game telemetry. Timer retains 0.5 second safety margin.",
+  "file": "spike-planted-reference-48k.pcm16",
+  "derivation": "Decoded from original 48 kHz WebM, not upsampled from 8 kHz."
+}

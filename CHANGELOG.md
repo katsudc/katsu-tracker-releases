@@ -1,5 +1,16 @@
 # Release notes
 
+## 1.9.6-personal.36
+
+- Show startup update discovery and let the user choose when to download and install.
+- Display actual download bytes/percent, verify the signed package, install silently, and reopen the tracker automatically.
+- Keep an independent progress window visible while the installed app is replaced; provide retry/reopen controls on failure.
+- Add a visual Spike overlay editor with draggable position, keyboard placement, text size, background opacity, reset and automatic saving.
+- Position the countdown relative to the physical game viewport across resolutions and mixed-DPI monitors, and refresh its native topmost order without activating it.
+- Preserve the working icon detector, round reset, defuse color thresholds and existing preferences. True exclusive-fullscreen composition remains controlled by Windows.
+- Publish the application source and Windows build instructions. GitHub generates the language breakdown from the repository.
+
+
 Installers and complete version history are available in [GitHub Releases](https://github.com/katsudc/katsu-tracker-releases/releases).
 
 ## 1.9.6-personal.35

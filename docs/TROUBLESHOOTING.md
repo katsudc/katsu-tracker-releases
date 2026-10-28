@@ -20,6 +20,9 @@ The history covers up to 20 accessible Competitive matches. Initial loading and 
 2. Use **Borderless Windowed / Windowed Fullscreen** in VALORANT.
 3. Keep the game HUD visible and let the game remain in the foreground.
 4. On a multi-monitor setup, check the display that contains the game.
+5. Use **Edit overlay → Reset position & style** if an old custom position or size is unsuitable.
+
+The app refreshes its own topmost placement without focusing or altering the game. An external desktop window cannot guarantee visibility over a true exclusive-fullscreen surface; use a Windows-composed fullscreen mode.
 
 The detector uses the planted-Spike HUD icon. Changing microphone or recording settings will not help this visual detector. Defuse progress is not measured.
 
@@ -33,7 +36,7 @@ Press **Show lineups** after choosing the filters. If the embedded page is unava
 
 ## An update does not appear
 
-Restart the tracker to trigger its startup check and allow time for the download. Close VALORANT before installing a ready update. You can also download the installer from the [latest release](https://github.com/katsudc/katsu-tracker-releases/releases/latest).
+Restart the tracker to trigger the visible startup check. Choose **Update now** to download and install, and close VALORANT first. A failed download or installation offers a retry. If automatic restart cannot be confirmed, use **Open tracker**. You can also download the installer from the [latest release](https://github.com/katsudc/katsu-tracker-releases/releases/latest).
 
 ## Still stuck?
 

@@ -1,0 +1,59 @@
+
+# Common build directories
+**/node_modules/
+**/dist/
+**/target/
+**/gen/
+**/out/
+release_output/
+# Discord RPC source images (uploaded to Discord portal, not needed in repo)
+discord_assets/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+*.local
+
+# Signing keys
+*.key
+*.key.pub
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+.agent/
+.gemini/
+.vscode/
+.roo/
+
+# MemPalace per-project files (issue #185)
+mempalace.yaml
+entities.json
+
+admin/config.js
+telemetry.local.json
+
+# Local opencode config (Supabase PAT)
+.opencode/
+
+# Local credentials and runtime state; never publish these.
+.env
+.env.*
+*.dpapi
+*.pfx
+*.pem
+spike-overlay.json
+signed-update/

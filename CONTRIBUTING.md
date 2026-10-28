@@ -7,13 +7,13 @@ Thanks for helping improve katsu's Tracker.
 - Clear bug reports with reproducible steps.
 - Focused feature requests that explain the problem being solved.
 - Documentation corrections, accessibility feedback and translation feedback.
-- Improvements to the public documentation through a pull request.
+- Focused source-code, testing and documentation improvements through a pull request.
 
 Search existing issues before opening a new one. Keep unrelated ideas in separate issues and describe the expected behavior.
 
 ## Current repository scope
 
-This repository contains releases, documentation and issue tracking. Application source code is not published here yet, so application-code pull requests are not currently available in this repository.
+This repository contains the Windows desktop application source, releases, documentation and issue tracking. See [Building from source](docs/BUILDING.md) for setup and validation commands. Keep changes focused, explain observable behavior and include the checks relevant to your change.
 
 Documentation is written in English for the public project. The application itself continues to support English and Turkish.
 

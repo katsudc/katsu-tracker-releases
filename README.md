@@ -35,12 +35,12 @@ Your personal match history stays useful between games. Preferences are saved au
 | :--- | :--- |
 | **Live match overview** | Both teams, available player identities, agents and rank icons. Confirmed unranked accounts and unavailable ranks have distinct labels. |
 | **Agent presets** | A default agent, map-specific choices and a configurable automatic-lock delay. |
-| **Visual Spike timer** | A compact countdown triggered by the planted-Spike HUD icon, displayed on the game monitor and reset when the round ends. |
+| **Visual Spike timer** | A compact countdown triggered by the planted-Spike HUD icon, displayed on the game monitor and reset when the round ends. Drag, resize and restyle it in a saved visual editor. |
 | **Spotify mini-player** | Track information, artwork, progress, previous/play/next and Spotify-only volume in an expandable player. |
 | **Personal history & insights** | Your last 5, 10 or 20 accessible Competitive matches, personal performance trends and agent/map breakdowns. |
 | **Community lineups** | Browse Tracker.gg guides with agent, map and attack/defense filters. |
 | **Make it yours** | Five accent themes, English and Turkish UI, saved settings and a movable desktop window. |
-| **Verified updates** | Automatic update downloads with updater-signature verification. Install when VALORANT is closed. |
+| **Verified updates** | Startup checks, one-click signed downloads with progress, silent installation and automatic restart while VALORANT is closed. |
 
 [Explore the features →](docs/FEATURES.md)
 
@@ -63,7 +63,7 @@ Your personal match history stays useful between games. Preferences are saved au
 3. Open Riot Client and VALORANT normally. The tracker connects to the existing session.
 4. Press **F2** to show or hide the main window. Choose your agent preferences and theme in **Options**.
 
-Use **Borderless Windowed / Windowed Fullscreen** for the overlay. The visual Spike detector needs the HUD to remain visible. To use music controls, play a track in the Windows Spotify desktop app.
+The overlay follows the physical game viewport across resolutions and monitors. Windows must compose external windows over the game; **Borderless Windowed / Windowed Fullscreen** is the most reliable mode. True exclusive fullscreen can hide external overlays. The visual Spike detector needs the HUD to remain visible. To use music controls, play a track in the Windows Spotify desktop app.
 
 [Installation & setup](docs/GETTING_STARTED.md) · [Troubleshooting](docs/TROUBLESHOOTING.md)
 
@@ -79,11 +79,24 @@ Use **Borderless Windowed / Windowed Fullscreen** for the overlay. The visual Sp
 
 ## Updates & feedback
 
-Once installed, the app checks for updates and downloads a verified package in the background. Install a ready update while VALORANT is closed, or allow it on the next tracker launch. Existing preferences are preserved.
+At startup, the app shows its update check. When a release is available, choose **Update now** with VALORANT closed. The app displays download progress, verifies the updater signature, installs quietly and restarts automatically. Preferences are preserved. Versions older than 1.9.6-personal.36 use their previous update flow once to reach this version.
 
 Found something to improve? [Report a bug](https://github.com/katsudc/katsu-tracker-releases/issues/new?template=bug_report.yml) or [suggest a feature](https://github.com/katsudc/katsu-tracker-releases/issues/new?template=feature_request.yml).
 
 [Release notes](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Brand assets](docs/BRAND_ASSETS.md)
+
+## Build from source
+
+The desktop application uses **Rust + Tauri 2**, **TypeScript + React**, and **CSS + Tailwind**. Build on Windows x64 with Node.js, pnpm 11.24.0, stable Rust, Microsoft C++ Build Tools and the Windows SDK:
+
+```powershell
+git clone https://github.com/katsudc/katsu-tracker-releases.git
+cd katsu-tracker-releases
+pnpm install --frozen-lockfile
+pnpm exec tauri dev
+```
+
+[Windows build & architecture guide](docs/BUILDING.md) · [Contribution guide](CONTRIBUTING.md)
 
 ## Project & license
 
@@ -91,6 +104,6 @@ Found something to improve? [Report a bug](https://github.com/katsudc/katsu-trac
 
 Created and maintained by **[katsu](https://github.com/katsudc)**. Licensed under the [MIT License](LICENSE).
 
-This repository currently contains public downloads, documentation and issue tracking. Application source code is not published here yet.
+The application source, public downloads, documentation and issue tracking are available in this repository. GitHub’s **Languages** panel calculates the language breakdown from the tracked source; vendored dependencies and generated fixtures are excluded.
 
 Independent community project. Not affiliated with Riot Games, Spotify or Tracker Network. Third-party names and artwork belong to their respective owners.

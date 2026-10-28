@@ -1,0 +1,115 @@
+import { useShallow } from "zustand/react/shallow";
+import { memo, useEffect, useRef } from "react";
+import { usePanelStore } from "../stores/panelStore";
+import { useGameStore } from "../stores/gameStore";
+import { SettingsPanel } from "./SettingsPanel";
+import { PlayerPanel } from "./PlayerPanel";
+import { ShopPanel } from "./ShopPanel";
+import { useI18n } from "../lib/i18n";
+import { X } from "lucide-react";
+
+export const SidePanel = memo(function SidePanel() {
+  const { isOpen, panelType, settingsSubView, playerSubView, playerSource, selectedPlayer, close } = usePanelStore(useShallow(s=>({isOpen:s.isOpen,panelType:s.panelType,settingsSubView:s.settingsSubView,playerSubView:s.playerSubView,playerSource:s.playerSource,selectedPlayer:s.selectedPlayer,close:s.close})));
+  const { t } = useI18n();
+  const matchState = useGameStore((s) => s.gameState.state);
+  const prevMatchState = useRef(matchState);
+
+  // Close roster player panel when a match ends — not when opening from idle (last match / friends).
+  useEffect(() => {
+    const prev = prevMatchState.current;
+    prevMatchState.current = matchState;
+    const wasLive = prev === "ingame" || prev === "pregame";
+    const nowLive = matchState === "ingame" || matchState === "pregame";
+    if (wasLive && !nowLive && isOpen && (panelType === "player")) {
+      close();
+    }
+  }, [matchState, isOpen, panelType, close]);
+
+  // Never leave the window expanded with a hollow right pane
+  useEffect(() => {
+    if (!isOpen) return;
+    if (!panelType) {
+      close();
+      return;
+    }
+    if ((panelType === "player") && !selectedPlayer) {
+      close();
+    }
+  }, [isOpen, panelType, selectedPlayer, close]);
+
+  const setSettingsSubView = usePanelStore((s) => s.setSettingsSubView);
+  const setPlayerSubView = usePanelStore((s) => s.setPlayerSubView);
+
+  // ESC: back from nested views, otherwise close panel
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (
+          panelType === "settings" &&
+          settingsSubView === "presets"
+        ) {
+          setSettingsSubView("main");
+        } else if (panelType === "player" && playerSubView === "regulars" && playerSource !== "friends") {
+          setPlayerSubView("skins");
+        } else {
+          close();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, close, panelType, settingsSubView, playerSubView, playerSource, setSettingsSubView, setPlayerSubView]);
+
+  const canRender =
+    isOpen &&
+    panelType != null &&
+    (panelType === "settings" ||
+      panelType === "shop" ||
+      ((panelType === "player") && selectedPlayer != null));
+
+  if (!canRender) return null;
+
+  const getTitle = () => {
+    switch (panelType) {
+      case "settings":
+        if (settingsSubView === "presets") {
+          return t("presets.title");
+        }
+        return t("settings.title");
+      case "shop":
+        return t("shop.title");
+      default:
+        return playerSubView === "regulars" || playerSource === "friends" ? t("player.regulars") : t("player.weaponSkins");
+    }
+  };
+
+  return (
+    <div className="desktop-side-panel h-full bg-[#0a0e13]/95 backdrop-blur-md border-l border-accent-cyan/20 flex flex-col shadow-[-15px_0_30px_-10px_rgba(0,0,0,0.5)] animate-slide-enter-right relative overflow-hidden flex-none z-20">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-gradient-to-r from-white/5 to-transparent">
+        <div className="flex items-center gap-2">
+          <div className="w-0.5 h-3 bg-accent-cyan shadow-[0_0_8px_rgba(0,212,170,0.5)]" />
+          <span className="font-display text-[13px] font-bold text-primary uppercase tracking-[0.12em]">{getTitle()}</span>
+        </div>
+        <button
+          onClick={close}
+          className="w-6 h-6 flex items-center justify-center text-dim hover:text-white hover:bg-white/10 rounded transition-all duration-200 group"
+          title={t("common.close")}
+        >
+          <X className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-90" />
+        </button>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto">
+        {panelType === "settings" && <SettingsPanel />}
+        {panelType === "player" && <PlayerPanel />}
+        {panelType === "shop" && <ShopPanel />}
+      </div>
+
+      {/* Bottom accent line */}
+      <div className="h-0.5 bg-linear-to-r from-transparent via-accent-cyan/50 to-transparent" />
+    </div>
+  );
+});
