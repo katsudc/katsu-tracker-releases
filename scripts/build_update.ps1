@@ -7,6 +7,7 @@ if ($ToolchainRoot) {
  $env:CARGO_HOME=Join-Path $toolchain 'cargo'; $env:RUSTUP_HOME=Join-Path $toolchain 'rustup'
  $env:PATH="$env:CARGO_HOME\bin;$env:PATH"; $env:RUSTUP_TOOLCHAIN='stable'
 }
+& (Join-Path $PSScriptRoot 'prepare_widget_runtime.ps1')
 $config=Get-Content 'src-tauri/tauri.conf.json' -Raw | ConvertFrom-Json
 $version=$config.version
 $frontendVersion=(Get-Content 'package.json' -Raw | ConvertFrom-Json).version

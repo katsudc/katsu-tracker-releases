@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { invoke } from "../suite/ipc";
 import { listen } from "@tauri-apps/api/event";
 import { useI18n } from "../lib/i18n";
+import { setupErrorKey, setupSucceeded, useGameBarSetupReport } from "./gameBarSetupReport";
 
 type OutputStatus = {
   enabled: boolean;
@@ -39,17 +40,22 @@ function useOutputStatus() {
 
 function SetupActions({ status, onDefer }: { status: OutputStatus; onDefer?: () => void }) {
   const { t } = useI18n();
-  const [error, setError] = useState(false);
-  const installing = status.phase === "installing_game_bar" || status.phase === "installing_widget";
+  const report = useGameBarSetupReport();
+  const [error, setError] = useState<string|null>(null), [copyMessage,setCopyMessage]=useState("");
+  const [requesting,setRequesting]=useState(false);
+  const installing = requesting || status.phase === "installing_game_bar" || status.phase === "installing_widget";
   const ready = status.widget_installed && status.game_bar_installed;
+  const failure = error ?? (report && !setupSucceeded(report.code) ? report.code : status.error);
   async function install() {
-    setError(false);
+    setError(null);setCopyMessage("");setRequesting(true);
     try {
       // This click is the installation and publisher-trust consent. Mounting,
       // dismissing, or receiving a display-mode event must never start a download.
       await invoke("prepare_spike_game_bar", { trustPublisher: true });
-    } catch { setError(true); }
+    } catch(e) { setError(typeof e === "string" && /^[a-z_]{1,64}$/.test(e) ? e : "setup_request_failed"); }
+    finally {setRequesting(false);}
   }
+  async function copyReport(){if(!report)return;try{await navigator.clipboard.writeText(JSON.stringify(report,null,2));setCopyMessage(t("spike.setupCopied"));}catch{setCopyMessage(t("spike.setupCopyError"));}}
   return <>
     {installing ? <p role="status">{t(status.phase === "installing_game_bar" ? "spike.installingGameBar" : "spike.installingWidget")}</p> : !ready ? <>
       <p>{t(status.game_bar_installed ? "spike.widgetInstallPrompt" : "spike.fullscreenInstallPrompt")}</p>
@@ -59,14 +65,10 @@ function SetupActions({ status, onDefer }: { status: OutputStatus; onDefer?: () 
         {onDefer && <button onClick={onDefer}>{t("spike.installDefer")}</button>}
       </div>
     </> : null}
-    {(status.error === "store_required" || status.error === "game_bar_install") && <button onClick={() => void invoke("open_spike_game_bar", { store: true }).catch(() => setError(true))}>{t("spike.openStore")}</button>}
-    {(error || (status.error && status.error !== "publisher_trust_required")) && <p role="alert" className="spike-warning">{t(
-      status.error === "setup_cancelled" ? "spike.setupCancelled" :
-      status.error === "administrator_required" ? "spike.administratorRequired" :
-      status.error === "widget_package_invalid" ? "spike.widgetPackageInvalid" :
-      status.error === "widget_package_missing" ? "spike.widgetPackageMissing" :
-      status.error === "store_required" || status.error === "game_bar_install" ? "spike.gameBarInstallError" : "spike.outputSetupError"
-    )}</p>}
+    {(failure === "store_required" || failure === "game_bar_install") && <button onClick={() => void invoke("open_spike_game_bar", { store: true }).catch(() => setError("game_bar_launch"))}>{t("spike.openStore")}</button>}
+    {!ready && !installing && failure && failure !== "publisher_trust_required" && <div role="alert" className="spike-warning"><p>{t(setupErrorKey(failure))}</p><code className="spike-setup-code">{t("spike.setupCode")}: {failure}{report?.hresult ? " · "+report.hresult : ""}{report ? " · "+report.stage : ""}</code>{report?.activity_id&&<p className="spike-setup-code">ActivityId: {report.activity_id}</p>}</div>}
+    {report && report.code !== "install_started" && <button onClick={()=>void copyReport()}>{t("spike.copySetupReport")}</button>}
+    {copyMessage&&<p role="status">{copyMessage}</p>}
   </>;
 }
 

@@ -1,5 +1,20 @@
 import nativeLabels from "../../raw/suite-native-labels.json";
 const pairs: Array<[string, string, string]> = [
+  ["spike.setupCode", "Setup error", "Kurulum hatası"],
+  ["spike.copySetupReport", "Copy setup report", "Kurulum raporunu kopyala"],
+  ["spike.setupCopied", "Setup codes copied. No account names or paths are included.", "Kurulum kodları kopyalandı. Hesap adı veya dosya yolu içermez."],
+  ["spike.setupCopyError", "Could not copy the report. You can export it under Tools → Diagnostics.", "Rapor kopyalanamadı. Araçlar → Tanılama bölümünden dışa aktarabilirsin."],
+  ["spike.runtimeMissing", "The widget needs the x64 Microsoft.VCLibs.140.00 UWP framework. Xbox Game Bar alone does not guarantee it is installed. Copy the setup report; the desktop Visual C++ redistributable is a different package.", "Widget için x64 Microsoft.VCLibs.140.00 UWP bileşeni gerekli. Game Bar kurulu olsa da bu bileşen eksik olabilir. Kurulum raporunu kopyala; normal masaüstü Visual C++ paketi farklıdır."],
+  ["spike.installPolicyBlocked", "Windows policy blocks this app package. Copy the setup report; the tracker will not change security policies automatically.", "Windows ilkesi bu uygulama paketini engelliyor. Kurulum raporunu kopyala; tracker güvenlik ilkelerini otomatik değiştirmez."],
+  ["spike.publisherUntrusted", "Windows does not trust the widget publisher. Retry and approve the Windows prompt, then copy the report if it fails.", "Windows widget yayıncısına güvenmiyor. Tekrar deneyip Windows onayını ver; başarısız olursa raporu kopyala."],
+  ["spike.publisherExpired", "The widget certificate is expired or the system date is incorrect. Check the date and use an updated tracker package.", "Widget sertifikasının süresi dolmuş veya sistem tarihi yanlış. Tarihi kontrol et ve güncel tracker paketini kullan."],
+  ["spike.widgetInUse", "Windows reports the widget package is in use. Close Game Bar and retry.", "Windows widget paketinin kullanımda olduğunu bildiriyor. Game Bar’ı kapatıp tekrar dene."],
+  ["spike.installAccessDenied", "Windows denied access during setup. Copy the error code to identify the blocked stage.", "Windows kurulum sırasında erişimi reddetti. Engellenen aşamayı belirlemek için hata kodunu kopyala."],
+  ["spike.helperFailed", "The Windows PowerShell setup helper could not run or stopped before reporting its result. Copy the setup report.", "Windows PowerShell kurulum yardımcısı çalışamadı veya sonuç vermeden durdu. Kurulum raporunu kopyala."],
+  ["spike.packageQueryFailed", "Windows app-package information could not be read. Copy the setup report.", "Windows uygulama paketi bilgileri okunamadı. Kurulum raporunu kopyala."],
+  ["spike.windowsUnsupported", "The widget needs Windows 10 version 1903 or newer, or Windows 11.", "Widget için Windows 10 sürüm 1903 veya üzeri ya da Windows 11 gerekli."],
+  ["spike.widgetRegistrationMissing", "The setup helper finished, but Windows did not register the widget for this account. Copy the setup report.", "Kurulum yardımcısı tamamlandı ancak Windows widget’ı bu hesaba kaydetmedi. Kurulum raporunu kopyala."],
+
   ["suite.paused", "Paused this run", "Bu çalıştırmada duraklatıldı"],
   ["suite.installed", "Widget installed", "Widget kurulu"],
   ["suite.notInstalled", "Widget not installed", "Widget kurulu değil"],

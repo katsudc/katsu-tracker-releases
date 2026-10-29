@@ -1,5 +1,11 @@
 # Release notes
 
+## 1.9.6-personal.52
+
+- Bundle the Microsoft-signed x64 UWP C++ runtime for first-time widget installation.
+- Report setup stages and Windows error codes, add a copyable setup report and preserve diagnostics even when the main log is unavailable.
+- Keep Spike detection and timer presentation unchanged.
+
 ## 1.9.6-personal.51
 
 - Publish the Companion Suite expansion: app-focused command palette, system tray, temporary Safe Mode and sanitized diagnostic ZIP export.

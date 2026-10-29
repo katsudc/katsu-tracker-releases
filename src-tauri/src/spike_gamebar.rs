@@ -348,9 +348,11 @@ fn prepare(app: &tauri::AppHandle, trust: bool) -> Result<(), String> {
         return Err("installation_consent_required".into());
     }
     let state = app.state::<GameBar>();
+    crate::gamebar_install_report::record(app, crate::gamebar_install_report::InstallReport::new("package_query", "install_started"));
     let (present, widget) = installed()?;
     if !present {
         phase(app, "installing_game_bar", None);
+        crate::gamebar_install_report::record(app, crate::gamebar_install_report::InstallReport::new("game_bar_install", "install_started"));
         let winget = std::env::var_os("LOCALAPPDATA")
             .map(|p| PathBuf::from(p).join("Microsoft/WindowsApps/winget.exe"))
             .filter(|p| p.is_file())
@@ -384,6 +386,7 @@ fn prepare(app: &tauri::AppHandle, trust: bool) -> Result<(), String> {
     }
     if widget.is_none() {
         phase(app, "installing_widget", None);
+        crate::gamebar_install_report::record(app, crate::gamebar_install_report::InstallReport::new("validate_files", "install_started"));
         let directory = app
             .path()
             .resource_dir()
@@ -424,7 +427,9 @@ fn prepare(app: &tauri::AppHandle, trust: bool) -> Result<(), String> {
             .arg("-CertificatePath")
             .arg(certificate)
             .arg("-ExpectedCertificateThumbprint")
-            .arg(include_str!("../../gamebar/build/WidgetPublisher.thumbprint").trim());
+            .arg(include_str!("../../gamebar/build/WidgetPublisher.thumbprint").trim())
+            .arg("-DependencyPath")
+            .arg(directory.join("Dependencies/Microsoft.VCLibs.x64.14.00.appx"));
         if trust {
             command.arg("-TrustMachinePublisher");
         }
@@ -433,28 +438,16 @@ fn prepare(app: &tauri::AppHandle, trust: bool) -> Result<(), String> {
             use std::os::windows::process::CommandExt;
             command.creation_flags(0x08000000);
         }
+        crate::gamebar_install_report::record(app, crate::gamebar_install_report::InstallReport::new("powershell_launch", "install_started"));
         let result = command
             .stdin(std::process::Stdio::null())
-            .stdout(std::process::Stdio::null())
-            .stderr(std::process::Stdio::null())
-            .status()
-            .map_err(|_| "widget_install")?;
-        if result.code() == Some(3) {
-            return Err("publisher_trust_required".into());
-        }
-        if result.code() == Some(4) {
-            return Err("administrator_required".into());
-        }
-        if result.code() == Some(5) {
-            return Err("setup_cancelled".into());
-        }
-        if !result.success() {
-            tracing::warn!(
-                "[Spike output] Widget installation exited with {:?}",
-                result.code()
-            );
-            return Err("widget_install".into());
-        }
+            .output()
+            .map_err(|_| "powershell_unavailable")?;
+        let report = crate::gamebar_install_report::parse(&result.stdout, &result.stderr, result.status.code());
+        let code = report.code.clone();
+        crate::gamebar_install_report::record(app, report);
+        if !result.status.success() { return Err(code); }
+
     }
     let (present, family) = installed()?;
     {
@@ -463,6 +456,10 @@ fn prepare(app: &tauri::AppHandle, trust: bool) -> Result<(), String> {
         i.status.widget_installed = family.is_some();
         i.family = family;
     }
+    if !present || !state.inner.lock().status.widget_installed { return Err("widget_registration_missing".into()); }
+    let mut report = crate::gamebar_install_report::load(app).unwrap_or_default();
+    report.schema = 1; report.stage = "ready".into(); report.code = "widget_installed".into();
+    crate::gamebar_install_report::record(app, report);
     phase(app, "pin_required", None);
     Ok(())
 }
@@ -479,6 +476,9 @@ fn begin_prepare(app: tauri::AppHandle, trust: bool) {
             );
         }
         if let Err(error) = prepare(&app, trust) {
+            let mut report = crate::gamebar_install_report::load(&app).unwrap_or_else(|| crate::gamebar_install_report::InstallReport::new("request", "widget_install"));
+            report.code = error.clone();
+            crate::gamebar_install_report::record(&app, report);
             phase(&app, "error", Some(error));
         }
         app.state::<GameBar>().busy.store(false, Ordering::SeqCst);

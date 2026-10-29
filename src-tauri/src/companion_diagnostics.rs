@@ -32,6 +32,7 @@ fn preview(app: &tauri::AppHandle) -> Value {
         "windows":windows,"runtime_mode":runtime.mode,"disabled_modules":runtime.disabled_modules,"failed_modules":runtime.failed_modules,
         "displays":displays,"game_detected":game.is_some(),"timer_enabled":spike["enabled"].as_bool(),
         "countdown_active":spike["remaining"].is_number(),"hud_capture":capture,"widget":widget,
+        "widget_setup":crate::gamebar_install_report::load(app),
         "events":[{"category":"runtime","state":crate::companion_runtime::status(app).mode},{"category":"hud","state":capture}],
         "exclusions":["account_names","player_ids","tokens","cookies","raw_logs","personal_files","file_paths","notes"]
     })

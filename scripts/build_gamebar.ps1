@@ -74,4 +74,5 @@ if($SignWithLocalTestCertificate){
  Set-Content -LiteralPath (Join-Path $buildRoot 'WidgetPublisher.thumbprint') -Value $certificate.Thumbprint -Encoding ascii
  Write-Output 'Signed for LOCAL TESTING. Publisher trust is a separate, explicit first-install step.'
 }
+& (Join-Path $PSScriptRoot 'prepare_widget_runtime.ps1')
 Write-Output "Game Bar package ready: $package"

@@ -9,11 +9,19 @@ The existing visual detector, HUD capture area, thresholds, polling, fuse durati
 
 ## First setup
 
-Open **Spike Timer** and approve Fullscreen component setup if prompted. Nothing is downloaded or installed before approval; **Not now** dismisses the prompt. The widget and public publisher certificate are bundled. A missing Xbox Game Bar is obtained through Microsoft Store/WinGet after approval, with a displayed error and Store fallback if Windows policy or installation availability prevents it.
+Open **Spike Timer** and approve Fullscreen component setup if prompted. Nothing is downloaded or installed before approval; **Not now** dismisses the prompt. The widget, public publisher certificate and the Microsoft-signed x64 UWP C++ framework are bundled. Missing `Microsoft.VCLibs.140.00` is supplied through the package dependency transaction after approval; the desktop Visual C++ redist and `UWPDesktop` package do not substitute for this framework. A missing Xbox Game Bar is obtained through Microsoft Store/WinGet after approval, with a displayed error and Store fallback if Windows policy or installation availability prevents it.
 
 The current direct-distribution widget uses a self-signed publisher certificate. Windows may request administrator approval to trust that public certificate in **Local Computer → Trusted People**, affecting this computer’s accounts. The helper validates the package signer and the certificate pinned into the desktop build before registering trust. Only certificate registration is elevated; package registration stays in the original user’s account. UAC cancellation stops setup. No certificate is added to Trusted Root, no private signing key is distributed, and the tracker does not need to stay elevated.
 
 Enable Xbox Game Bar in Windows if Win + G does not open. Pin **katsu’s Tracker** once. While Game Bar is open, the widget shows a 45.0 positioning preview. The application reports the SDK’s actual click-through value; turn it on in Game Bar and close the Game Bar menu to pass clicks through the active countdown. The app does not silently override that Windows preference.
+
+## Installation errors
+
+The setup page shows the failing stage, a safe category, any Windows HRESULT and the deployment ActivityId when supplied by Windows. **Copy setup report** copies only these codes and prerequisite booleans; it excludes names, tokens and file paths. Tools → Diagnostics includes the same allowlisted report. A bounded `gamebar-setup-report.json` in the app data directory preserves the last attempt even when the general application log is unavailable.
+
+Preflight validates the bundled signer and prerequisites before requesting certificate trust. Missing/invalid framework files, blocked deployment policies, access denial, certificate errors and cancelled administrator approval are reported separately. The tracker does not change Developer Mode or Windows deployment/security policies automatically.
+
+The bundled retail framework is extracted from the pinned Microsoft Visual Studio CRT Appx payload by `scripts/prepare_widget_runtime.ps1`; both archive and Appx hashes are checked. This build step extracts files only and does not install them. The helper verifies the framework Appx hash again before using it. A read-only `-DiagnoseOnly` helper mode checks prerequisites without importing certificates or registering packages.
 
 ## Small window, no invisible input area
 

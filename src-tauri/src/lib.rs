@@ -1,3 +1,4 @@
+mod gamebar_install_report;
 mod companion_runtime;
 mod companion_diagnostics;
 mod media;
@@ -138,6 +139,7 @@ pub fn run() -> RunResult {
         .manage(updates::Updates::default())
         .manage(AppState::new())
         .invoke_handler(tauri::generate_handler![
+            gamebar_install_report::get_game_bar_setup_report,
             companion_runtime::runtime_status,
             companion_runtime::own_account_id,
             companion_runtime::runtime_choose,

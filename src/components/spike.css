@@ -41,3 +41,5 @@
 
 .spike-output-settings {margin-top:14px;padding-top:12px;border-top:1px solid #ffffff10;font-size:10px;line-height:1.55;}
 .spike-output-line {display:flex;justify-content:space-between;gap:8px;}.spike-output-line strong {color:#dce7f4;font-weight:500;}.spike-output-settings p {color:#8da1b5;margin:7px 0;}.spike-output-settings button {width:100%;}.spike-output-ready {color:#83e6b7;font-size:10px;}
+
+.spike-setup-code{display:block;white-space:normal;overflow-wrap:anywhere;font:10px/1.6 monospace;margin:7px 0;color:#edbd81}
