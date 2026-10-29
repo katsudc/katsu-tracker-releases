@@ -95,7 +95,7 @@ export function PresetsTab() {
       unlisten = await listen<{ ok: boolean; preset_id: string; error: string | null }>(
         "preset_auto_applied",
         async (e) => {
-          const { toast } = await import("sonner");
+          const { toast } = await import("../features/notifications");
           const preset = usePresetsStore.getState().presets.find((p) => p.id === e.payload.preset_id);
           const nm = preset?.name ?? "";
           if (e.payload.ok) {

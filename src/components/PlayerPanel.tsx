@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+import { privateName, usePrivateNames } from "../features/privacy";
 import { useState, useEffect, useRef } from "react";
 import { invokeCommand } from "../utils/ipc";
 import { useGameStore } from "../stores/gameStore";
@@ -160,7 +162,7 @@ const weaponIconCache = new Map<string, WeaponInfo>();
 const expressionMetaCache = new Map<string, Map<string, ExpressionInfo>>();
 
 export function PlayerPanel() {
-	const { selectedPlayer, setHoveredWeapon, playerSubView, setPlayerSubView, playerSource } =
+	const { selectedPlayer: sourcePlayer, setHoveredWeapon, playerSubView, setPlayerSubView, playerSource } =
 		usePanelStore();
 	const fromFriends = playerSource === "friends";
 	const { getAgentIcon } = useAssetsStore();
@@ -168,6 +170,8 @@ export function PlayerPanel() {
 	const matchId = gameState.match_id;
 	const inMatch = gameState.state === "ingame" || gameState.state === "pregame";
 	const { t, locale } = useI18n();
+	const privateNames = usePrivateNames();
+	const selectedPlayer = useMemo(() => sourcePlayer && privateNames ? { ...sourcePlayer, name: privateName(sourcePlayer.is_me), name_from_history: false } : sourcePlayer, [sourcePlayer, privateNames, locale]);
 	const overlayPuuids = useOverlayUsersStore((s) => s.puuids);
 	const [skins, setSkins] = useState<WeaponSkin[]>([]);
 	const [expressions, setExpressions] = useState<EquippedExpression[]>([]);
@@ -187,7 +191,8 @@ export function PlayerPanel() {
 	const [isTranslating, setIsTranslating] = useState(false);
 	const [peakRank, setPeakRank] = useState<PeakRankData | null>(null);
 	const fetchedRef = useRef<string | null>(null);
-	const [regulars, setRegulars] = useState<FrequentTeammate[]>([]);
+	const [rawRegulars, setRegulars] = useState<FrequentTeammate[]>([]);
+	const regulars = useMemo(() => privateNames ? rawRegulars.map((v, i) => ({ ...v, name: privateName(false, i + 1) })) : rawRegulars, [rawRegulars, privateNames, locale]);
 	const [regularsScanned, setRegularsScanned] = useState(0);
 	const [regularsLoading, setRegularsLoading] = useState(false);
 	const [regularsError, setRegularsError] = useState<string | null>(null);
@@ -534,7 +539,7 @@ export function PlayerPanel() {
 	const handleTranslate = async (e: React.MouseEvent) => {
 		e.stopPropagation();
 		// Allow retry after error; block only after a successful attempt.
-		if (!selectedPlayer || isTranslating || translateDone) return;
+		if (privateNames || !selectedPlayer || isTranslating || translateDone) return;
 
 		setIsTranslating(true);
 		setTranslatedName(null);
@@ -591,7 +596,7 @@ export function PlayerPanel() {
 	};
 
 	const copyName = () => {
-		if (selectedPlayer) {
+		if (selectedPlayer && !privateNames) {
 			navigator.clipboard.writeText(selectedPlayer.name);
 			setCopied(true);
 			setTimeout(() => setCopied(false), 1500);
@@ -720,13 +725,14 @@ export function PlayerPanel() {
 	};
 
 	const copyRegular = (name: string) => {
-		if (!name) return;
+		if (privateNames || !name) return;
 		navigator.clipboard.writeText(name);
 		setRegularsCopied(name);
 		setTimeout(() => setRegularsCopied((cur) => (cur === name ? null : cur)), 1500);
 	};
 
 	const copyAllRegulars = () => {
+		if (privateNames) return;
 		const names = regulars.map((r) => r.name).filter(Boolean);
 		if (names.length === 0) return;
 		navigator.clipboard.writeText(names.join("\n"));
@@ -1338,6 +1344,7 @@ export function PlayerPanel() {
 
 								{/* Translate Button */}
 								<button
+									disabled={privateNames}
 									onClick={handleTranslate}
 									className={`p-1 rounded-full border transition-colors ${
 										isTranslating
@@ -1364,7 +1371,7 @@ export function PlayerPanel() {
 								</button>
 							</div>
 
-							{translatedName ? (
+							{!privateNames && translatedName ? (
 								<div className="text-[10px] text-[#f5d78e] font-medium italic -mt-0.5 truncate drop-shadow-[0_1px_3px_rgba(0,0,0,0.95)]">
 									{translatedName}
 									{detectedLang && (

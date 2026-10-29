@@ -1,3 +1,5 @@
+import { suiteMessages } from "../suite/messages";
+import { featureMessages } from "../features/messages";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -11,6 +13,8 @@ interface I18nStore {
 
 const translations: Record<Locale, Record<string, string>> = {
   en: {
+    ...featureMessages.en,
+    ...suiteMessages.en,
     "instalock.title": "Instalock",
     "instalock.pageDescription": "Choose your default agent, map preferences and lock delay.",
     "spike.title": "Spike Timer",
@@ -612,6 +616,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "queue.premierteam": "Premier",
   },
   tr: {
+    ...featureMessages.tr,
+    ...suiteMessages.tr,
     "instalock.title": "Instalock",
     "instalock.pageDescription": "Varsayılan ajanını, harita tercihlerini ve kilitleme süresini ayarla.",
     "spike.title": "Spike Timer",

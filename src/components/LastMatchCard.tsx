@@ -1,3 +1,4 @@
+import { privateName, usePrivateNames } from "../features/privacy";
 import { useEffect, useState } from "react";
 import { CachedImage } from "./CachedImage";
 import { useAssetsStore } from "../stores/assetsStore";
@@ -76,13 +77,14 @@ function LastMatchPlayerRow({
       ? parseInt(player.party.split("-")[1], 10) - 1
       : -1;
   const partyColor = partyIndex >= 0 ? PARTY_COLORS[partyIndex % 4] : null;
-  const rawName = (player.name || "").trim();
+  const privateNames = usePrivateNames();
+  const rawName = privateNames ? "" : (player.name || "").trim();
   const fromHistory = !!player.name_from_history;
   const isAuthor = player.puuid.toLowerCase() === AUTHOR_PUUID;
   const normalizedPuuid = normalizePuuid(player.puuid);
   const isOverlayUser =
     !isAuthor && normalizedPuuid != null && overlayPuuids.includes(normalizedPuuid);
-  const displayName = rawName || t("player.anonymousSlot", { n: slotIndex });
+  const displayName = privateNames ? privateName(player.is_me, slotIndex) : rawName || t("player.anonymousSlot", { n: slotIndex });
   const shortName = displayName.includes("#") ? displayName.split("#")[0] : displayName;
   const nameTitle = isAuthor
     ? t("player.authorHint")

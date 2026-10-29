@@ -161,7 +161,7 @@ function Segmented<T extends string>({
   );
 }
 
-export function SettingsPanel({ section = "general" }: { section?: "general" | "instalock" }) {
+export function SettingsPanel({ section = "general", onTools }: { section?: "general" | "instalock"; onTools?: () => void }) {
   const activeTab = section === "instalock" ? "autolock" : "general";
   const { autoLockAgent, setAutoLock, mapAgentPreferences } = useGameStore(useShallow(s => ({autoLockAgent:s.autoLockAgent,setAutoLock:s.setAutoLock,mapAgentPreferences:s.mapAgentPreferences})));
   const { theme,setTheme,hotkey,setHotkey,pauseHotkey,resumeHotkey,windowStyle,setWindowStyle,autoLockDelaySeconds,setAutoLockDelaySeconds,discordRpcEnabled,setDiscordRpcEnabled,minimizeToTray,setMinimizeToTray } = useSettingsStore(useShallow(s => ({theme:s.theme,setTheme:s.setTheme,hotkey:s.hotkey,setHotkey:s.setHotkey,pauseHotkey:s.pauseHotkey,resumeHotkey:s.resumeHotkey,windowStyle:s.windowStyle,setWindowStyle:s.setWindowStyle,autoLockDelaySeconds:s.autoLockDelaySeconds,setAutoLockDelaySeconds:s.setAutoLockDelaySeconds,discordRpcEnabled:s.discordRpcEnabled,setDiscordRpcEnabled:s.setDiscordRpcEnabled,minimizeToTray:s.minimizeToTray,setMinimizeToTray:s.setMinimizeToTray})));
@@ -523,6 +523,7 @@ export function SettingsPanel({ section = "general" }: { section?: "general" | "
         ) : (
           /* General Settings Tab — grouped rows */
           <div className="pb-3">
+            {onTools && <SettingsGroup title={t("tools.open")}><SettingsRow icon={SlidersHorizontal} label={t("tools.open")} desc={t("tools.description")} onClick={onTools} control={<ChevronRight className="w-4 h-4 text-secondary shrink-0"/>}/></SettingsGroup>}
             <SettingsGroup title={t("settings.sectionAppearance")}>
               <div className="theme-picker"><span>{t("desktop.theme")}</span><div>{THEMES.map(option=><button key={option} data-theme-option={option} className={theme===option?"selected":""} onClick={()=>setTheme(option)} title={t(`theme.${option}`)} aria-label={t(`theme.${option}`)} aria-pressed={theme===option}><i/>{theme===option&&<span>✓</span>}</button>)}</div></div>
               <SettingsRow
@@ -563,6 +564,9 @@ export function SettingsPanel({ section = "general" }: { section?: "general" | "
               />
             </SettingsGroup>
 
+            <SettingsGroup title={t("suite.traySettings")}>
+              <TrayPreferences/>
+            </SettingsGroup>
             <SettingsGroup title={t("settings.sectionControls")}>
               <SettingsRow
                 icon={Keyboard}
@@ -664,3 +668,5 @@ export function SettingsPanel({ section = "general" }: { section?: "general" | "
     </div>
   );
 }
+
+function TrayPreferences(){const {t}=useI18n();const {closeToTray,startMinimized,setCloseToTray,setStartMinimized}=useSettingsStore(useShallow(s=>({closeToTray:s.closeToTray,startMinimized:s.startMinimized,setCloseToTray:s.setCloseToTray,setStartMinimized:s.setStartMinimized})));return <><SettingsRow icon={ArrowDownToLine} label={t("suite.closeToTray")} desc={t("suite.closeToTrayHint")} control={<Toggle checked={closeToTray} onChange={setCloseToTray} label={t("suite.closeToTray")}/>}/><SettingsRow icon={ArrowDownToLine} label={t("suite.startMinimized")} control={<Toggle checked={startMinimized} onChange={setStartMinimized} label={t("suite.startMinimized")}/>}/></>;}

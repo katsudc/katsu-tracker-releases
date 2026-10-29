@@ -1,44 +1,56 @@
 {
-    "$schema": "../gen/schemas/desktop-schema.json",
-    "identifier": "default",
-    "description": "Capability for the main window",
-    "windows": [
-        "main"
-    ],
-    "permissions": [
-        "core:default",
-        "core:window:default",
-        "core:window:allow-show",
-        "core:window:allow-hide",
-        "core:window:allow-is-visible",
-        "core:window:allow-minimize",
-        "core:window:allow-unminimize",
-        "core:window:allow-set-focus",
-        "core:window:allow-close",
-        "core:window:allow-start-dragging",
-        "core:window:allow-set-position",
-        "core:window:allow-outer-position",
-        "core:window:allow-set-size",
-        "core:event:default",
-        "core:event:allow-listen",
-        "opener:default",
-        "global-shortcut:default",
-        "global-shortcut:allow-register",
-        "global-shortcut:allow-unregister",
-        "shell:allow-open",
-        "process:allow-restart",
-        "process:allow-exit",
-        "fs:default",
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "core:default",
+    "core:window:default",
+    "core:window:allow-show",
+    "core:window:allow-hide",
+    "core:window:allow-is-visible",
+    "core:window:allow-minimize",
+    "core:window:allow-unminimize",
+    "core:window:allow-set-focus",
+    "core:window:allow-close",
+    "core:window:allow-start-dragging",
+    "core:window:allow-set-position",
+    "core:window:allow-outer-position",
+    "core:window:allow-set-size",
+    "core:event:default",
+    "core:event:allow-listen",
+    "opener:default",
+    "global-shortcut:default",
+    "global-shortcut:allow-register",
+    "global-shortcut:allow-unregister",
+    "shell:allow-open",
+    "process:allow-restart",
+    "process:allow-exit",
+    "fs:default",
+    {
+      "identifier": "fs:scope",
+      "allow": [
         {
-            "identifier": "fs:scope",
-            "allow": [
-                { "path": "$APPCACHE" },
-                { "path": "$APPCACHE/**" },
-                { "path": "$APPDATA" },
-                { "path": "$APPDATA/**" }
-            ]
+          "path": "$APPCACHE"
         },
-        "dialog:default",
-        "dialog:allow-open"
-    ]
+        {
+          "path": "$APPCACHE/**"
+        },
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPDATA/**"
+        }
+      ]
+    },
+    "dialog:default",
+    "dialog:allow-open",
+    "dialog:allow-save",
+    "fs:allow-write-file",
+    "fs:allow-read-text-file",
+    "fs:allow-stat"
+  ]
 }

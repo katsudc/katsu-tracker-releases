@@ -1,6 +1,7 @@
 use crate::api::types::MmrResponse;
-#[derive(Clone, Copy, Default)]
+#[derive(Clone, Default)]
 pub struct RankSnapshot {
+    pub latest: Option<crate::api::types::LatestCompetitiveUpdate>,
     pub current_tier: Option<u32>,
     pub current_rr: Option<u32>,
     pub peak_tier: u32,
@@ -36,6 +37,7 @@ pub fn rank_snapshot_from_mmr(data: &MmrResponse) -> RankSnapshot {
         current_tier: current.map(|r| r.0),
         current_rr: current.map(|r| r.1),
         peak_tier: 0,
+        latest: data.latest_competitive_update.clone(),
     };
     if let Some(seasons) = data
         .queue_skills

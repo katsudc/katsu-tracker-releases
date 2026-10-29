@@ -1,5 +1,6 @@
-import { invoke, InvokeArgs } from "@tauri-apps/api/core";
-import { toast } from "sonner";
+import type { InvokeArgs } from "@tauri-apps/api/core";
+import { invoke } from "../suite/ipc";
+import { toast } from "../features/notifications";
 import { useI18n } from "../lib/i18n";
 
 // Map backend error messages to i18n keys

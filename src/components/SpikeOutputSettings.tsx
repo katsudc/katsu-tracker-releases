@@ -1,5 +1,6 @@
+import { useRuntimeStore } from "../suite/runtimeStore";
 import { useEffect, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { invoke } from "../suite/ipc";
 import { listen } from "@tauri-apps/api/event";
 import { useI18n } from "../lib/i18n";
 
@@ -71,9 +72,10 @@ function SetupActions({ status, onDefer }: { status: OutputStatus; onDefer?: () 
 
 export function GameBarSetupNotice() {
   const { t } = useI18n();
+  const optional = useRuntimeStore(s => s.mode === "normal");
   const { status } = useOutputStatus();
   const [deferred, setDeferred] = useState(false);
-  if (!status || !status.enabled || status.mode !== "fullscreen" || deferred || status.phase === "checking" || (status.widget_installed && status.game_bar_installed)) return null;
+  if (!optional || !status || !status.enabled || status.mode !== "fullscreen" || deferred || status.phase === "checking" || (status.widget_installed && status.game_bar_installed)) return null;
   return <aside className="gamebar-setup-notice" aria-label={t("spike.setupTitle")}>
     <strong>{t("spike.setupTitle")}</strong>
     <SetupActions status={status} onDefer={() => setDeferred(true)} />
@@ -81,8 +83,10 @@ export function GameBarSetupNotice() {
 }
 
 export function SpikeOutputSettings() {
+  const optional = useRuntimeStore(s => s.mode === "normal");
   const { t } = useI18n();
   const { status, error, setError } = useOutputStatus();
+  if (!optional) return <p className="personal-muted">{t("suite.safeModules")}</p>;
   if (!status) return error ? <p className="spike-warning">{t("spike.outputUnavailable")}</p> : null;
   const ready = status.widget_installed && status.game_bar_installed;
   return <div className="spike-output-settings">

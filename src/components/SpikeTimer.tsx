@@ -1,5 +1,6 @@
+import { useRuntimeStore } from "../suite/runtimeStore";
 import { useEffect, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { invoke } from "../suite/ipc";
 import { listen } from "@tauri-apps/api/event";
 import "./spike.css";
 import { useI18n } from "../lib/i18n";
@@ -52,6 +53,7 @@ export function SpikeOverlay() {
 }
 
 export function SpikeSettings() {
+  const optional = useRuntimeStore(s => s.mode === "normal");
   const { status:s, error, setError } = useSpikeStatus();
   const [busy, setBusy] = useState(false);
   const [editing,setEditing] = useState(false);
@@ -63,8 +65,9 @@ export function SpikeSettings() {
   }
   return <section className="spike-settings spike-simple">
     <div className="spike-setting-heading"><h3>{t("spike.title")}</h3>
-      <button role="switch" aria-label="Spike timer" aria-checked={s.enabled} disabled={busy}
+      <button role="switch" aria-label="Spike timer" aria-checked={s.enabled} disabled={busy || !optional}
         onClick={()=>void run("spike_set_enabled",{enabled:!s.enabled})}>{t(s.enabled ? "spike.on" : "spike.off")}</button></div>
+    {!optional && <p className="personal-muted">{t("suite.safeModules")}</p>}
     <section className="spike-display-card" aria-label={t("spike.windowedTitle")}>
       <h4>{t("spike.windowedTitle")}</h4><p>{t("spike.windowedDescription")}</p>
       <button className="spike-edit-button" onClick={()=>setEditing(true)}>{t("spike.edit")}</button>

@@ -8,6 +8,14 @@ The tracker connects to the existing Riot Client session and uses it for game st
 
 Preferences, content artwork and personal match-history snapshots are cached locally. Cached information helps the app remain useful when a refresh fails. Public preview screenshots in this repository use sample identities and data.
 
+## Companion Suite data
+
+Local notes, lineup packs, crosshair/sensitivity profiles, moment timestamps, session goals and a bounded account registry use versioned app storage. Match notes/goals and existing personal cache are account scoped; reference tools are shared. None of these user-generated notes or markers are uploaded. Moment marking records no video, screenshots or audio.
+
+Tools → Privacy describes network activity and offers confirmed, scoped clearing. The broad managed-data reset preserves Riot sign-in, VALORANT files, saved game presets, installed Game Bar components and signing keys. Safe Mode temporarily pauses optional integrations without changing saved preferences.
+
+Tools → Diagnostics exports an allowlisted local ZIP after preview. It excludes account names/IDs, raw logs, paths, notes, cookies and credentials. [Companion Suite details](COMPANION_SUITE.md) cover sample limits and recovery behavior.
+
 ## Network services
 
 | Service | Purpose |
@@ -16,6 +24,9 @@ Preferences, content artwork and personal match-history snapshots are cached loc
 | VALORANT content API and its media host | Agent, map, rank and other content artwork. |
 | GitHub Releases | Update discovery, installer downloads and release documentation. |
 | Tracker.gg | Community lineup pages loaded when you request them in the Lineups view. |
+| Optional Discord activity | Observed game-state presence when enabled; streamer mode pauses it. |
+| Requested name translation | Google translation endpoints, on user request. |
+| Local Game Bar bridge | Timer and widget state on this computer. |
 | Windows media/audio session | Local Spotify metadata, playback and app-specific volume controls. |
 
 External lineup pages are governed by their provider. Their availability and page behavior are outside this project's control.

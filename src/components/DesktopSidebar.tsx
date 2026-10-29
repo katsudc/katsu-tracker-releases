@@ -1,5 +1,5 @@
 import { useShallow } from "zustand/react/shallow";
-import { BarChart3, BookOpen, Crosshair, LockKeyhole, Timer, Settings2, ShoppingBag } from "lucide-react";
+import { BarChart3, BookOpen, Crosshair, LockKeyhole, Timer, Settings2, ShoppingBag, Wrench } from "lucide-react";
 import { useTrackerStore } from "../tracker/store";
 import { usePanelStore } from "../stores/panelStore";
 import { useI18n } from "../lib/i18n";
@@ -14,6 +14,7 @@ export function DesktopSidebar({view,setView}:{view:string;setView:(view:string)
     { id: "spike", label: t("spike.title"), icon: Timer, run: () => {setView("spike");void panel.close();} },
     { id: "lineups", label: t("lineups.title"), icon: BookOpen, run: () => {setView("lineups");void panel.close();} },
     { id: "shop", label: t("shop.title"), icon: ShoppingBag, run: () => {setView("match");void panel.openShop();} },
+    { id: "tools", label: t("tools.nav"), icon: Wrench, run: () => {setView("tools");void panel.close();} },
     { id: "settings", label: t("settings.title"), icon: Settings2, run: () => {setView("match");void panel.openSettings();} },
   ];
   return (

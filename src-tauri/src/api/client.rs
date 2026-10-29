@@ -3143,7 +3143,7 @@ mod match_detail_gate_tests {
         let other=api.clone();
         let queued=tokio::spawn(async move {other.get_match_details("shared").await});
         tokio::task::yield_now().await;
-        let fixture=MatchDetailsResponse {match_info:None,players:Some(vec![]),teams:None};
+        let fixture=MatchDetailsResponse {round_results:None,match_info:None,players:Some(vec![]),teams:None};
         api.match_details_cache.write().insert("shared".into(),fixture);
         // Cached data remains readable even during a real rate-limit window.
         *api.rate_limit_until.write()=Some(std::time::Instant::now()+std::time::Duration::from_secs(60));

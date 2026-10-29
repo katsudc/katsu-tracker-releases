@@ -1,5 +1,7 @@
 # Features
 
+The [Companion Suite milestone](COMPANION_SUITE.md) adds command search, tray/recovery, personal performance views, local player tools and privacy controls. Version .51 also fixes the normal-start recovery transition.
+
 ## Live match overview
 
 The match view presents both teams with names, agents and available ranks. Rank artwork is cached when available, with a visual fallback when it cannot load. Confirmed unranked accounts and unavailable ranks are labelled separately.
@@ -37,5 +39,27 @@ The Lineups view uses agent, map and side filters to open Tracker.gg community g
 ## Themes, language and updates
 
 Choose Mint, Blue, Violet, Rose or Amber. The interface supports English and Turkish, with preferences saved between launches. The startup update check is visible. Choose when to download and install a signed release; download progress appears in the app, installation runs silently and the tracker restarts automatically.
+
+## Personal lineup library
+
+The **Lineups → My library** tab keeps up to 200 video bookmarks locally, with an agent, map, side, notes, favorite status and a saved start time. Search titles/notes or filter by your current agent/map/side choices. Add, edit and remove entries without loading a third-party page. Video links open only after a click. YouTube links open at the saved time; other providers show the timestamp with the note.
+
+## Daily sessions
+
+The **Statistics** page includes Today, Yesterday, Last 7 days, This session and a custom date range. Session boundaries are stored separately for each account. Totals use the available Competitive history (up to 20 matches) and local calendar dates; missing dates are excluded. Starting a new session does not delete any history. No estimated RR changes are invented.
+
+## Shareable match cards
+
+Open a completed match and choose **Create match card** to preview a themed 1080 × 660 PNG containing your own result, agent, map and available metrics. Save it through the Windows file picker or copy the image to the clipboard. Names are optional and are disabled when streamer-name hiding is active. Creating the card does not upload it anywhere.
+
+## Setup and tools
+
+**Tools** contains a three-step first-run guide, settings transfer, streamer mode and live connection/overlay diagnostics. The setup guide can be opened again. Changing the setup instructions does not modify VALORANT's display mode. Selecting a monitor moves only the tracker window; the timer still follows the actual game window. Fullscreen component installation always requires the existing explicit approval.
+
+Settings files contain an allowlisted, versioned set of preferences: language, theme, hotkey, window behavior, agent preferences, lock delay, Discord preference, timer toggle/appearance and streamer preferences. A preview is shown before import, invalid files are rejected, and imports are disabled during agent select or a live match. Failed native updates attempt to restore the previous values and report incomplete recovery honestly. Credentials, account sessions, lineup notes, match history, device coordinates and certificate trust are excluded. Game Bar position remains managed by Windows.
+
+Streamer mode can mask roster/profile/scoreboard/player-detail names, hide chat, quiet toast notifications and hide the Spotify player. Discord activity is paused while the mode is active. These choices affect this tracker, not VALORANT or broadcasting software.
+
+Diagnostics read the existing connection, game-display, HUD capture, timer, component, pin and click-through status. They run while the page is mounted and provide relevant next steps; they do not install software or change Windows settings.
 
 [Setup guide](GETTING_STARTED.md) · [Troubleshooting](TROUBLESHOOTING.md) · [Back](../README.md)

@@ -1,3 +1,4 @@
+import { usePersonalStore } from "../features/personalStore";
 import bundledContactInfo from "../../raw/contact.json";
 import { create } from "zustand";
 import { createJSONStorage, persist, type StateStorage } from "zustand/middleware";
@@ -72,6 +73,8 @@ interface SettingsState {
   discordRpcEnabled: boolean;
   /** Hide to tray (true, default) vs normal taskbar minimize (false). */
   minimizeToTray: boolean;
+  closeToTray: boolean;
+  startMinimized: boolean;
   /** First-launch tip toast; shown once then persisted as seen. */
   hasSeenWelcome: boolean;
 }
@@ -98,6 +101,8 @@ interface SettingsStore extends SettingsState {
   setDiscordRpcEnabled: (enabled: boolean) => void;
   syncDiscordRpc: () => void;
   setMinimizeToTray: (enabled: boolean) => void;
+  setCloseToTray: (enabled: boolean) => void;
+  setStartMinimized: (enabled: boolean) => void;
   markWelcomeSeen: () => void;
 }
 
@@ -261,6 +266,10 @@ export const useSettingsStore = create<SettingsStore>()(
       autoLockDelaySeconds: DEFAULT_AUTO_LOCK_DELAY_SECONDS,
       discordRpcEnabled: true,
       minimizeToTray: true,
+      closeToTray: false,
+      startMinimized: false,
+      setCloseToTray: closeToTray => set({ closeToTray }),
+      setStartMinimized: startMinimized => set({ startMinimized }),
       hasSeenWelcome: false,
 
       markWelcomeSeen: () => {
@@ -283,13 +292,13 @@ export const useSettingsStore = create<SettingsStore>()(
 
       setDiscordRpcEnabled: (enabled: boolean) => {
         set({ discordRpcEnabled: enabled });
-        invokeCommand("set_discord_rpc", { enabled }).catch(console.error);
+        invokeCommand("set_discord_rpc", { enabled: enabled && !usePersonalStore.getState().stream.enabled }).catch(console.error);
       },
 
       // Push the persisted Discord RPC preference to the (fresh) backend on startup.
       syncDiscordRpc: () => {
         afterSettingsHydrated(() => {
-          invokeCommand("set_discord_rpc", { enabled: get().discordRpcEnabled }).catch(console.error);
+          invokeCommand("set_discord_rpc", { enabled: get().discordRpcEnabled && !usePersonalStore.getState().stream.enabled }).catch(console.error);
         });
       },
 
@@ -533,6 +542,8 @@ export const useSettingsStore = create<SettingsStore>()(
         autoLockDelaySeconds: state.autoLockDelaySeconds,
         discordRpcEnabled: state.discordRpcEnabled,
         minimizeToTray: state.minimizeToTray,
+        closeToTray: state.closeToTray,
+        startMinimized: state.startMinimized,
         hasSeenWelcome: state.hasSeenWelcome,
       }),
       merge: (persisted, current) => {
@@ -548,6 +559,8 @@ export const useSettingsStore = create<SettingsStore>()(
           ),
           // Legacy saves without this key keep the default (tray).
           minimizeToTray: p.minimizeToTray ?? current.minimizeToTray,
+          closeToTray: typeof p.closeToTray === "boolean" ? p.closeToTray : false,
+          startMinimized: typeof p.startMinimized === "boolean" ? p.startMinimized : false,
         };
       },
       onRehydrateStorage: () => (_state, error) => {

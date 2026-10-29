@@ -51,6 +51,7 @@ impl StatsProvider for SessionProvider {
             seed.status = "refreshing".into();
             let rank_failed = rank.is_none();
             if let Some(r) = rank {
+                seed.latest_update = r.latest.clone().map(PersonalRankUpdate::from);
                 seed.rank = Some(Rank {
                     tier: r.current_tier,
                     rr: if r.current_tier.is_some_and(|tier| tier > 0) {
@@ -89,7 +90,14 @@ impl StatsProvider for SessionProvider {
                 } else {
                     None
                 };
-                if let Some(m) = parsed {
+                if let Some(mut m) = parsed {
+                    if let Some(previous) = previous.iter().find(|old|old.id==m.id) {
+                        m.rr_delta=previous.rr_delta; m.rr_after=previous.rr_after; m.tier_after=previous.tier_after;
+                    }
+                    if let Some(update)=seed.latest_update.as_ref().filter(|u|u.match_id.as_deref()==Some(m.id.as_str())) {
+                        m.rr_delta=update.earned.or(m.rr_delta);m.rr_after=update.rr_after.or(m.rr_after);m.tier_after=update.tier_after.or(m.tier_after);
+                        if m.season_id.is_none(){m.season_id=update.season_id.clone();}
+                    }
                     matches.push(m);
                 } else if let Some(old) = previous.iter().find(|m| &m.id == id) {
                     matches.push(old.clone());

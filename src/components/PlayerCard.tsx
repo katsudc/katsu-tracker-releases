@@ -1,3 +1,4 @@
+import { privateName, usePrivateNames } from "../features/privacy";
 import type { PlayerData } from "../lib/types";
 import { CachedImage } from "./CachedImage";
 import { AGENT_COLORS, RANK_TIERS, PARTY_COLORS, AUTHOR_PUUID } from "../lib/constants";
@@ -16,7 +17,8 @@ export function PlayerCard({ player, slotIndex = 1 }: Props) {
   const overlayPuuids = useOverlayUsersStore(s => s.puuids);
   const isSelected = panelType === "player" && selectedPlayer?.puuid === player.puuid;
   const agentLabel = player.agent ? player.agent.charAt(0).toUpperCase() + player.agent.slice(1) : t("player.agentUnavailable");
-  const displayName = player.name?.trim() || t("player.anonymousSlot", { n: slotIndex });
+  const privateNames = usePrivateNames();
+  const displayName = privateNames ? privateName(player.is_me, slotIndex) : player.name?.trim() || t("player.anonymousSlot", { n: slotIndex });
   const agentIcon = player.agent ? getAgentIcon(player.agent) : null;
   const agentColor = AGENT_COLORS[player.agent?.toLowerCase()] || "#768079";
   const knownRank = player.rank_available === true || (player.rank_available == null && player.rank_tier > 0);

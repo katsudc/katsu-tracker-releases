@@ -2,7 +2,7 @@ param([Parameter(Mandatory=$true)][string]$OutputDirectory, [Parameter(Mandatory
 $ErrorActionPreference='Stop'
 & (Join-Path $PSScriptRoot 'check_source_secrets.ps1')
 $OutputDirectory=(Resolve-Path -LiteralPath $OutputDirectory).Path
-$manifest=Get-Content -LiteralPath (Join-Path $OutputDirectory 'latest.json') -Raw | ConvertFrom-Json
+$manifest=Get-Content -LiteralPath (Join-Path $OutputDirectory 'latest.json') -Raw -Encoding utf8 | ConvertFrom-Json
 $version=$manifest.version
 if ($version -notmatch '^\d+\.\d+\.\d+-personal\.\d+$') {throw 'Unexpected release version'}
 $repo='katsudc/katsu-tracker-releases'

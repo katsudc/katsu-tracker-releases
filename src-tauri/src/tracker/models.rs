@@ -56,6 +56,20 @@ pub fn ratio(n: u32, d: u32) -> Option<f64> {
 }
 #[derive(Clone, Debug, Serialize, Deserialize, Default)]
 pub struct Match {
+    #[serde(default)]
+    pub season_id: Option<String>,
+    #[serde(default)]
+    pub first_kills: Option<u32>,
+    #[serde(default)]
+    pub first_deaths: Option<u32>,
+    #[serde(default)]
+    pub opening_rounds: Option<u32>,
+    #[serde(default)]
+    pub rr_delta: Option<i32>,
+    #[serde(default)]
+    pub rr_after: Option<u32>,
+    #[serde(default)]
+    pub tier_after: Option<u32>,
     pub id: String,
     pub map: String,
     pub queue: String,
@@ -69,6 +83,8 @@ pub struct Match {
 }
 #[derive(Clone, Debug, Serialize, Deserialize, Default)]
 pub struct Snapshot {
+    #[serde(default)]
+    pub latest_update: Option<PersonalRankUpdate>,
     pub schema: u32,
     pub provider: String,
     pub profile: Option<Profile>,
@@ -86,6 +102,7 @@ pub fn now() -> u64 {
         .as_secs()
 }
 pub fn parse_session(details: crate::api::types::MatchDetailsResponse, who: &str) -> Option<Match> {
+    let opening = super::personal_rounds::opening_duels(&details, who);
     let info = details.match_info?;
     if info.is_completed == Some(false) {
         return None;
@@ -168,6 +185,9 @@ pub fn parse_session(details: crate::api::types::MatchDetailsResponse, who: &str
         .map(|v| v.to_string())
         .unwrap_or_else(|| map.rsplit('/').next().unwrap_or("").to_owned());
     let mut value = Match {
+        season_id: info.season_id,
+        first_kills: opening.map(|v|v.0), first_deaths: opening.map(|v|v.1), opening_rounds: opening.map(|v|v.2),
+        rr_delta: None, rr_after: None, tier_after: None,
         id,
         map,
         queue: info.queue_id.unwrap_or_default(),
@@ -210,5 +230,19 @@ pub fn sanitize_snapshot(snapshot: &mut Snapshot) {
                 player.damage = None;
             }
         }
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, Default)]
+pub struct PersonalRankUpdate {
+    pub match_id: Option<String>, pub season_id: Option<String>,
+    pub tier_before: Option<u32>, pub tier_after: Option<u32>,
+    pub rr_before: Option<u32>, pub rr_after: Option<u32>,
+    pub earned: Option<i32>, pub at: Option<u64>,
+}
+impl From<crate::api::types::LatestCompetitiveUpdate> for PersonalRankUpdate {
+    fn from(v: crate::api::types::LatestCompetitiveUpdate) -> Self {
+        Self { match_id:v.match_id, season_id:v.season_id, tier_before:v.tier_before_update, tier_after:v.tier_after_update,
+            rr_before:v.ranked_rating_before_update,rr_after:v.ranked_rating_after_update,earned:v.ranked_rating_earned,at:v.match_start_time }
     }
 }

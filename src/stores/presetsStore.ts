@@ -123,7 +123,7 @@ export const usePresetsStore = create<PresetsStore>((set, get) => ({
       let msg = raw;
       if (raw.includes("GAME_RUNNING")) msg = t("presets.gameRunning");
       else if (raw.includes("STALE_TOKEN")) msg = t("presets.staleToken");
-      const { toast } = await import("sonner");
+      const { toast } = await import("../features/notifications");
       toast.error(msg);
       return false;
     } finally {

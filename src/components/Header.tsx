@@ -1,3 +1,6 @@
+import { useRuntimeStore } from "../suite/runtimeStore";
+import { usePersonalStore } from "../features/personalStore";
+import { EyeOff } from "lucide-react";
 import { MusicIsland } from "./MusicIsland";
 import { useEffect } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -9,9 +12,13 @@ import { useUpdateStore } from "../stores/updateStore";
 import { useChatStore } from "../stores/chatStore";
 import { usePanelStore } from "../stores/panelStore";
 import { useI18n } from "../lib/i18n";
-import { MessageSquare, Minus, PanelLeftClose, RefreshCw, X } from "lucide-react";
+import { Keyboard, MessageSquare, Minus, PanelLeftClose, RefreshCw, X } from "lucide-react";
 
 export function Header() {
+  const stream = usePersonalStore(s => s.stream);
+  const optional = useRuntimeStore(s => s.mode === "normal");
+  const closeToTray = useSettingsStore(s => s.closeToTray);
+  const privateNames = stream.enabled && stream.hideNames;
   const region = useGameStore((s) => s.region);
   const gameState = useGameStore((s) => s.gameState);
   const status = useGameStore((s) => s.status);
@@ -35,6 +42,7 @@ export function Header() {
   const isBusy = isReconnecting || status === "CONNECTING";
 
   const closeApp = async () => {
+    if (closeToTray) { await getCurrentWindow().close(); return; }
     const isConfirmed = await confirm(t("dialog.closeMessage"), {
       title: t("dialog.closeTitle"),
       kind: 'warning',
@@ -109,10 +117,12 @@ export function Header() {
         </span>
       </div>
 
-      <MusicIsland />
+      {!optional ? <div className="music-private">{t("suite.safeActive")}</div> : stream.enabled && stream.hideMusic ? <div className="music-private"><EyeOff size={17}/>{t("stream.musicHidden")}</div> : <MusicIsland />}
+      {stream.enabled && <span className="stream-badge" title={t("stream.enabled")}><EyeOff size={12}/></span>}
       {/* Right: Actions */}
+      <button className="icon-btn" aria-label={t("suite.palette")} title={t("suite.palette") + " · Ctrl+K"} onClick={() => window.dispatchEvent(new Event("katsu-command-palette"))}><Keyboard size={16}/></button>
       <div className="relative z-10 flex items-center gap-1 bg-dark/40 p-1 rounded-xl border border-white/[0.03] shrink-0">
-        <button onClick={handleOpenChat} className="icon-btn" title={t("header.chat")}>
+        <button disabled={privateNames} onClick={handleOpenChat} className="icon-btn" title={t("header.chat")}>
           <MessageSquare className="w-[15px] h-[15px]" />
         </button>
 

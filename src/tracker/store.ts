@@ -1,6 +1,6 @@
 import {create} from 'zustand';
 import {listen} from '@tauri-apps/api/event';
-import {invoke} from '@tauri-apps/api/core';
+import { invoke } from "@tauri-apps/api/core";
 import {EMPTY_SNAPSHOT,type TrackerSnapshot} from './models';
 let startPromise:Promise<void>|null=null,queued:boolean|null=null;
 interface TrackerStore {data:TrackerSnapshot;busy:boolean;selectedId:string|null;postId:string|null;limit:5|10|20;start:()=>Promise<void>;refresh:(force?:boolean)=>Promise<void>;select:(id:string|null)=>void;setLimit:(n:5|10|20)=>void;setPost:(id:string|null)=>void}

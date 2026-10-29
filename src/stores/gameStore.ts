@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { toast } from "sonner";
+import { toast } from "../features/notifications";
 import { invokeCommand } from "../utils/ipc";
 import type { ConnectionEvent, GameState } from "../lib/types";
 import { useI18n } from "../lib/i18n";

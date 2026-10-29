@@ -1,3 +1,6 @@
+import { useSuiteNavigation } from "../suite/navigation";
+import { LineupLibrary } from "../features/LineupLibrary";
+import { useLibraryStore } from "../features/libraryStore";
 import { useEffect, useMemo, useState } from "react";
 import { BookOpen, ExternalLink, LoaderCircle, Maximize2, Minimize2, Play, RefreshCw } from "lucide-react";
 import { openUrl } from "@tauri-apps/plugin-opener";
@@ -8,7 +11,7 @@ import { useAssetsStore } from "../stores/assetsStore";
 import { useSettingsStore } from "../stores/settingsStore";
 import { useLineupsStore, lineupSlug, lineupUrl, LINEUP_MAPS, type LineupFilters } from "../stores/lineupsStore";
 
-export function LineupsPage() {
+export function LineupsPage({libraryOnly=false}:{libraryOnly?:boolean}={}) {
   const { t } = useI18n();
   const { agent, map, side, setFilters } = useLineupsStore();
   const constants = useConstantsStore(s => s.constants);
@@ -20,6 +23,10 @@ export function LineupsPage() {
   const [slow, setSlow] = useState(false);
   const [focused, setFocused] = useState(false);
   const [error, setError] = useState(false);
+  const [tab, setTab] = useState<"community" | "library">(libraryOnly?"library":"community");
+  const focus=useSuiteNavigation(s=>s.focus);
+  useEffect(()=>{if(focus==="lineup-search")setTab("library");},[focus]);
+  const libraryCount = useLibraryStore(s => s.items.length);
   const agents = useMemo(() => {
     const names = new Map<string, string>();
     for (const name of [...AGENTS, ...(constants?.agents.map(a => a.name) ?? [])]) {
@@ -53,6 +60,7 @@ export function LineupsPage() {
     return () => window.removeEventListener("keydown", onKey);
   }, [focused]);
   function show() {
+    setTab("community");
     setLoaded(false); setSlow(false); setError(false);
     setApplied({ agent, map, side }); setRevision(n => n + 1);
   }
@@ -65,12 +73,14 @@ export function LineupsPage() {
   return (
     <section className={`lineups-page ${focused ? "lineups-focus" : ""}`} aria-label={t("lineups.title")}>
       <div className="lineups-heading"><div><span className="eyebrow">{t("lineups.community")}</span><h2>{t("lineups.title")}</h2><p>{t("lineups.description")}</p></div><button className="lineup-icon" aria-label={focused ? t("lineups.collapse") : t("lineups.expand")} title={focused ? t("lineups.collapse") : t("lineups.expand")} onClick={() => setFocused(v => !v)}>{focused ? <Minimize2 size={17}/> : <Maximize2 size={17}/>}</button></div>
+      <div className="personal-tabs"><button aria-pressed={tab === "community"} onClick={() => setTab("community")}>{t("library.community")}</button><button aria-pressed={tab === "library"} onClick={() => setTab("library")}>{t("library.mine")}<span className="tab-count">{libraryCount}</span></button></div>
       <form className="lineups-filters" onSubmit={e => { e.preventDefault(); show(); }}>
         <label>{t("lineups.agent")}<select aria-label={t("lineups.agent")} value={agent} onChange={e => setFilters({ agent: e.target.value })}>{agents.map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select></label>
         <label>{t("lineups.map")}<select aria-label={t("lineups.map")} value={map} onChange={e => setFilters({ map: e.target.value })}>{maps.map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select></label>
         <label>{t("lineups.side")}<select aria-label={t("lineups.side")} value={side} onChange={e => setFilters({ side: e.target.value === "defense" ? "defense" : "attack" })}><option value="attack">{t("lineups.attack")}</option><option value="defense">{t("lineups.defense")}</option></select></label>
         <button className="lineups-submit" type="submit" disabled={!currentUrl}><Play size={14}/>{t("lineups.show")}</button>
       </form>
+      {tab === "library" ? <LineupLibrary agents={agents} maps={maps}/> : <>
       {dirty && <p className="lineups-notice" role="status">{t("lineups.changed")}</p>}
       <div className="lineups-frame-shell">
         {url && visible ? <>
@@ -80,6 +90,7 @@ export function LineupsPage() {
       </div>
       <div className="lineups-source"><span>{applied ? `${agentName(applied.agent)} · ${mapName(applied.map)} · ${t(applied.side === "attack" ? "lineups.attack" : "lineups.defense")}` : t("lineups.credit")}</span><div>{url && <button onClick={() => setRevision(n => n + 1)} title={t("lineups.reload")} aria-label={t("lineups.reload")}><RefreshCw size={13}/></button>}<button onClick={() => void openSource()}><ExternalLink size={12}/>Tracker.gg</button></div></div>
       {(error || (slow && !loaded)) && <p className="lineups-notice" role="status">{t("lineups.unavailable")}</p>}
+      </>}
     </section>
   );
 }

@@ -1,0 +1,26 @@
+{
+  "en": {
+    "suite.trayOpen": "Open katsu's Tracker",
+    "suite.trayStreamer": "Streamer Mode",
+    "suite.traySpike": "Spike Timer",
+    "suite.trayInstalock": "Instalock",
+    "suite.trayState": "VALORANT",
+    "suite.trayExit": "Exit",
+    "suite.state.idle": "Menu",
+    "suite.state.pregame": "Agent select",
+    "suite.state.ingame": "In match",
+    "suite.state.disconnected": "Not connected"
+  },
+  "tr": {
+    "suite.trayOpen": "katsu's Tracker'ı aç",
+    "suite.trayStreamer": "Yayıncı modu",
+    "suite.traySpike": "Spike Timer",
+    "suite.trayInstalock": "Instalock",
+    "suite.trayState": "VALORANT",
+    "suite.trayExit": "Çıkış",
+    "suite.state.idle": "Menü",
+    "suite.state.pregame": "Ajan seçimi",
+    "suite.state.ingame": "Maçta",
+    "suite.state.disconnected": "Bağlı değil"
+  }
+}

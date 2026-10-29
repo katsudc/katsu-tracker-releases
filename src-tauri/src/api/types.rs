@@ -342,6 +342,12 @@ pub struct MmrResponse {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct LatestCompetitiveUpdate {
+    #[serde(default, rename = "MatchID")]
+    pub match_id: Option<String>,
+    #[serde(default)]
+    pub match_start_time: Option<u64>,
+    #[serde(default)]
+    pub ranked_rating_earned: Option<i32>,
     #[serde(default)]
     pub tier_after_update: Option<u32>,
     #[serde(default)]
@@ -432,6 +438,8 @@ pub struct MatchHistoryEntry {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MatchDetailsResponse {
+    #[serde(default)]
+    pub round_results: Option<Vec<PersonalRoundResult>>,
     pub match_info: Option<MatchInfo>,
     pub players: Option<Vec<MatchPlayer>>,
     #[serde(default)]
@@ -441,6 +449,8 @@ pub struct MatchDetailsResponse {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MatchInfo {
+    #[serde(default, alias = "seasonID")]
+    pub season_id: Option<String>,
     pub match_id: Option<String>,
     #[serde(rename = "queueID")]
     pub queue_id: Option<String>,
@@ -1180,4 +1190,32 @@ mod tests {
         assert_eq!(pd.queue_id.as_deref(), Some("competitive"));
         assert!(pd.party_owner_match_score_ally_team.is_none());
     }
+}
+
+
+// Optional round data is used only to derive the current user's opening duels.
+// Positions, economy, abilities and opponent performance are not retained here.
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct PersonalRoundResult {
+    #[serde(default)]
+    pub player_stats: Option<Vec<PersonalRoundPlayer>>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct PersonalRoundPlayer {
+    #[serde(default)]
+    pub subject: Option<String>,
+    #[serde(default)]
+    pub kills: Option<Vec<PersonalRoundKill>>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct PersonalRoundKill {
+    #[serde(default, alias = "timeSinceRoundStartMillis")]
+    pub round_time: Option<u64>,
+    #[serde(default)]
+    pub killer: Option<String>,
+    #[serde(default)]
+    pub victim: Option<String>,
 }

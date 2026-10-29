@@ -1,8 +1,8 @@
 export interface TrackerProfile {puuid:string;name:string|null;region:string;level:number|null}
 export interface RankInfo {tier:number|null;rr:number|null;peak:number|null}
 export interface PlayerMatchStats {puuid:string;name:string|null;agent:string;team:string;tier:number|null;is_me:boolean;kills:number|null;deaths:number|null;assists:number|null;score:number|null;rounds:number|null;headshots:number|null;bodyshots:number|null;legshots:number|null;damage:number|null}
-export interface TrackerMatch {id:string;map:string;queue:string;started_at:number|null;duration_ms:number|null;won:boolean|null;ally_score:number|null;enemy_score:number|null;me:PlayerMatchStats;players:PlayerMatchStats[]}
-export interface TrackerSnapshot {schema:number;provider:string;profile:TrackerProfile|null;rank:RankInfo|null;matches:TrackerMatch[];updated_at:number|null;partial:boolean;status:string;retry_at:number|null}
+export interface TrackerMatch {id:string;map:string;queue:string;started_at:number|null;duration_ms:number|null;won:boolean|null;ally_score:number|null;enemy_score:number|null;me:PlayerMatchStats;players:PlayerMatchStats[];season_id?:string|null;first_kills?:number|null;first_deaths?:number|null;opening_rounds?:number|null;rr_delta?:number|null;rr_after?:number|null;tier_after?:number|null}
+export interface TrackerSnapshot {schema:number;provider:string;profile:TrackerProfile|null;rank:RankInfo|null;matches:TrackerMatch[];updated_at:number|null;partial:boolean;status:string;retry_at:number|null;latest_update?:{match_id:string|null;season_id:string|null;tier_before:number|null;tier_after:number|null;rr_before:number|null;rr_after:number|null;earned:number|null;at:number|null}|null}
 export const EMPTY_SNAPSHOT:TrackerSnapshot={schema:1,provider:'session',profile:null,rank:null,matches:[],updated_at:null,partial:false,status:'no_profile',retry_at:null};
 export const divide=(a:number|null|undefined,b:number|null|undefined)=>a!=null&&b!=null&&b>0?a/b:null;
 export const acs=(p:PlayerMatchStats)=>divide(p.score,p.rounds);

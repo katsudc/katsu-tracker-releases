@@ -37,8 +37,11 @@ Your personal match history stays useful between games. Preferences are saved au
 | **Instalock** | A dedicated page for the default agent, map-specific choices and a lock-delay control directly below the portraits. |
 | **Visual Spike timer** | HUD-icon detection with a desktop overlay for windowed modes and an optional Game Bar widget for Fullscreen. Independent appearance settings, saved windowed editor and round-end reset. |
 | **Spotify mini-player** | Track information, artwork, progress, previous/play/next and Spotify-only volume in an expandable player. |
-| **Personal history & insights** | Your last 5, 10 or 20 accessible Competitive matches, personal performance trends and agent/map breakdowns. |
-| **Community lineups** | Browse Tracker.gg guides with agent, map and attack/defense filters. |
+| **Personal performance** | Your own accessible Competitive history, coach comparisons, map/agent drilldowns, Rank Journey, session goals and recap images. |
+| **Lineup references** | Browse community guides, save your own library, follow known game context and import/export validated lineup packs. |
+| **Player tools** | Local match/map/agent notes, optional moment timestamps, crosshair codes and sensitivity/eDPI profiles. |
+| **Everyday controls** | Ctrl+K navigation, Windows tray, temporary Safe Mode and previewed diagnostic reports. |
+| **Privacy controls** | Streamer mode, local account preferences and confirmed, scoped data clearing. |
 | **Make it yours** | Five accent themes, English and Turkish UI, saved settings and a movable desktop window. |
 | **Verified updates** | Startup checks, one-click signed downloads with progress, silent installation and automatic restart while VALORANT is closed. |
 

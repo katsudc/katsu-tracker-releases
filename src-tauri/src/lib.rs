@@ -1,3 +1,5 @@
+mod companion_runtime;
+mod companion_diagnostics;
 mod media;
 mod updates;
 mod update_worker;
@@ -136,21 +138,28 @@ pub fn run() -> RunResult {
         .manage(updates::Updates::default())
         .manage(AppState::new())
         .invoke_handler(tauri::generate_handler![
+            companion_runtime::runtime_status,
+            companion_runtime::own_account_id,
+            companion_runtime::runtime_choose,
+            companion_runtime::tray_sync,
+            companion_diagnostics::diagnostic_preview,
+            companion_diagnostics::diagnostic_zip,
+            tracker::tracker_clear_cache,
             tracker::tracker_load,
             tracker::tracker_refresh,
             updates::get_update_status,
             updates::check_for_updates,
             updates::apply_update,
-            spike_gamebar::get_spike_output_status,
+            companion_runtime::guarded_get_spike_output_status,
             spike_gamebar::prepare_spike_game_bar,
             spike_gamebar::open_spike_game_bar,
             spike_appearance::get_spike_appearance,
             spike_appearance::set_spike_appearance,
             spike_appearance::set_spike_gamebar_appearance,
             spike_appearance::get_spike_editor_context,
-            media::media_status,
-            media::media_control,
-            spike::spike_get_status,
+            companion_runtime::guarded_media_status,
+            companion_runtime::guarded_media_control,
+            companion_runtime::guarded_spike_get_status,
             spike::spike_set_enabled,
             spike::spike_reset,
             spike::spike_demo,
@@ -165,7 +174,7 @@ pub fn run() -> RunResult {
             commands::pause_watching,
             commands::resume_watching,
             commands::reconnect,
-            commands::set_discord_rpc,
+            companion_runtime::guarded_set_discord_rpc,
             commands::get_discord_rpc,
             commands::get_connection_status,
             commands::get_player_loadout,
@@ -233,9 +242,7 @@ pub fn run() -> RunResult {
             }
 
             spike_appearance::setup(app.handle())?;
-            spike_gamebar::setup(app.handle())?;
-            spike::setup(app.handle())?;
-            media::setup(app.handle())?;
+            companion_runtime::setup(app.handle())?;
             tracker::setup(app.handle())?;
             updates::start(app.handle().clone());
 
@@ -270,6 +277,14 @@ pub fn run() -> RunResult {
         })
         .on_window_event(|window, event| {
             if window.label() != "main" { return; }
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                if window.label()=="main" && companion_runtime::close_to_tray(window.app_handle()) {
+                    api.prevent_close();
+                    let _ = window.hide();
+                    if let Some(webview) = window.app_handle().get_webview_window("main") { set_webview_visible(&webview, false); }
+                    return;
+                }
+            }
             if window.label() == "main" && matches!(event, tauri::WindowEvent::Destroyed) {
                 spike_gamebar::shutdown(window.app_handle());
                 spike::shutdown(window.app_handle());
@@ -279,6 +294,7 @@ pub fn run() -> RunResult {
             if let tauri::WindowEvent::Resized(_) = event {
                 if let Some(webview) = window.app_handle().get_webview_window(window.label()) {
                     let minimized = window.is_minimized().unwrap_or(false);
+                    if minimized && window.label()=="main" && companion_runtime::minimize_to_tray(window.app_handle()) { let _=window.hide(); }
                     let shown = window.is_visible().unwrap_or(true);
                     set_webview_visible(&webview, shown && !minimized);
                 }
@@ -286,7 +302,7 @@ pub fn run() -> RunResult {
         })
         .build(context)
         .expect("error while building tauri application")
-        .run(|app, event| { if matches!(event, tauri::RunEvent::Exit) { spike_gamebar::shutdown(app); spike::shutdown(app); } });
+        .run(|app, event| { if matches!(event, tauri::RunEvent::Exit) { companion_runtime::clean_exit(app); spike_gamebar::shutdown(app); spike::shutdown(app); } });
 
     RunResult::Completed
 }

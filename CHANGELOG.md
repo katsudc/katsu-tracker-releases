@@ -1,5 +1,25 @@
 # Release notes
 
+## 1.9.6-personal.51
+
+- Publish the Companion Suite expansion: app-focused command palette, system tray, temporary Safe Mode and sanitized diagnostic ZIP export.
+- Add own-performance coach, map/agent drilldowns, Rank Journey, recap images and optional session goals.
+- Add portable lineup packs, local notes/moment timestamps, crosshair and sensitivity profiles, account preferences and privacy controls.
+- Fix a Windows deadlock when selecting Start normally after recovery by creating the existing overlay outside the synchronous IPC handler.
+- Preserve existing preferences, the visual Spike detector, Game Bar, Spotify and signed updater behavior.
+
+
+## 1.9.6-personal.50 — local testing, unpublished
+
+- Complete the .47–.50 Companion Suite expansion without changing the visual Spike detector.
+- Add app-focused command search, a Windows tray menu, temporary Safe Mode and sanitized diagnostic ZIP export.
+- Add personal coach, agent/map drilldowns, rank journey, available-history recap images and opt-in session goals.
+- Extend saved lineups with portable validated packs and optional observed-game filters.
+- Add local notes/moment timestamps, crosshair and sensitivity profiles, optional account instalock preferences and confirmed privacy controls.
+- Preserve .46 storage formats, updater, Spotify and existing desktop/Game Bar timer implementations.
+- Enter feature freeze: subsequent work prioritizes reliability, performance and user feedback.
+
+
 ## 1.9.6-personal.45
 
 - Add the optional Game Bar Spike timer for Fullscreen; windowed modes keep the desktop overlay.

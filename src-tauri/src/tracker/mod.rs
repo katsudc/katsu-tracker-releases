@@ -1,3 +1,4 @@
+mod personal_rounds;
 mod models;
 mod provider;
 #[cfg(test)]
@@ -223,4 +224,26 @@ pub async fn tracker_refresh(
             Ok(seed)
         }
     }
+}
+
+/// Remove only this tracker's explicit personal-history cache files, never Riot/session files.
+#[tauri::command]
+pub fn tracker_clear_cache(window:tauri::WebviewWindow,app:tauri::AppHandle,state:tauri::State<'_,Tracker>)->Result<(),String>{
+    if window.label()!="main"{return Err("window".into());}
+    if state.busy.swap(true,Ordering::SeqCst){return Err("busy".into());}
+    struct ClearRelease<'a>(&'a AtomicBool);
+    impl Drop for ClearRelease<'_>{fn drop(&mut self){self.0.store(false,Ordering::SeqCst);}}
+    let _release=ClearRelease(&state.busy);
+    if *app.state::<crate::state::AppState>().in_game_session.read(){return Err("busy".into());}
+    let root=state.dir.canonicalize().map_err(|_|"storage")?;
+    for entry in std::fs::read_dir(&root).map_err(|_|"storage")?.flatten().take(128) {
+        let name=entry.file_name().to_string_lossy().into_owned();
+        let kind=entry.file_type().map_err(|_|"storage")?;
+        if !kind.is_file() || kind.is_symlink(){continue;}
+        let owned=name=="last.json" || (name.starts_with("session-") && name.ends_with(".json") && name.chars().all(|c|c.is_ascii_alphanumeric()||c=='-'||c=='.'));
+        if owned && entry.path().parent()==Some(root.as_path()){std::fs::remove_file(entry.path()).map_err(|_|"storage")?;}
+    }
+    let empty=Snapshot {schema:1,provider:"session".into(),status:"no_profile".into(),..Default::default()};
+    *state.cache.lock()=empty.clone();*state.identity.lock()=None;
+    let _=app.emit("tracker_updated",&empty);Ok(())
 }

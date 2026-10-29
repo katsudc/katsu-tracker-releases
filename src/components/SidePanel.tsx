@@ -8,7 +8,7 @@ import { ShopPanel } from "./ShopPanel";
 import { useI18n } from "../lib/i18n";
 import { X } from "lucide-react";
 
-export const SidePanel = memo(function SidePanel() {
+export const SidePanel = memo(function SidePanel({ onTools }: { onTools?: () => void }) {
   const { isOpen, panelType, settingsSubView, playerSubView, playerSource, selectedPlayer, close } = usePanelStore(useShallow(s=>({isOpen:s.isOpen,panelType:s.panelType,settingsSubView:s.settingsSubView,playerSubView:s.playerSubView,playerSource:s.playerSource,selectedPlayer:s.selectedPlayer,close:s.close})));
   const { t } = useI18n();
   const matchState = useGameStore((s) => s.gameState.state);
@@ -103,7 +103,7 @@ export const SidePanel = memo(function SidePanel() {
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
-        {panelType === "settings" && <SettingsPanel />}
+        {panelType === "settings" && <SettingsPanel onTools={onTools}/>}
         {panelType === "player" && <PlayerPanel />}
         {panelType === "shop" && <ShopPanel />}
       </div>
